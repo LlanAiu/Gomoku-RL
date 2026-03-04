@@ -1,0 +1,1 @@
+from .random_move.routes import random_move_router

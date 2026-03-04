@@ -1,17 +1,25 @@
 # builtin
+from contextlib import asynccontextmanager
 
 # external
-
-# internal
 from fastapi import FastAPI
 
+# internal
+from src.globals import Environment
+from src.api import random_move_router
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    environment: Environment = Environment()
+    app.state.environment = environment
+
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
-def read_root():
+async def read_root() -> dict[str, str]:
     return {"Hello": "World"}
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
+app.include_router(router=random_move_router)
