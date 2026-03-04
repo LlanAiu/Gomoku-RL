@@ -12,4 +12,9 @@ export interface GameState {
     board: Board;
 }
 
+export interface Coordinate {
+    x: number;
+    y: number;
+}
+
 export const BOARD_SIZE = 15;

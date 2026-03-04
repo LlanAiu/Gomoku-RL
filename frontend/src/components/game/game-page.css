@@ -1,0 +1,44 @@
+.game-root {
+    padding: 12px;
+}
+
+.game-header {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+}
+
+.game-reset {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #999;
+    background: #fff;
+}
+
+.game-status {
+    margin-left: 12px;
+    min-width: 160px;
+    text-align: left;
+}
+
+.game-board-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.game-svg {
+    background: #F3D7A0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.game-hit {
+    cursor: pointer;
+}
+
+.game-hit-disabled {
+    cursor: default;
+}

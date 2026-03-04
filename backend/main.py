@@ -10,18 +10,18 @@ from src.globals import Environment
 from src.api import random_move_router
 
 
+environment: Environment = Environment()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    environment: Environment = Environment()
     app.state.environment = environment
-
     yield
 
 app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[environment.ALLOWED_ORIGIN],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

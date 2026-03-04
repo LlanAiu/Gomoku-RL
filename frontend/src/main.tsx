@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router'
-import GamePage from './components/game/GamePage.tsx'
-import ModelPage from './components/model/ModelPage.tsx'
+import GamePage from './components/game/game-page.tsx'
+import ModelPage from './components/model/model-page.tsx'
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>

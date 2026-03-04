@@ -22,7 +22,6 @@ async def get_random_move(input: RandomMoveInput) -> RandomMoveOutput:
                 empty_positions.append((r, c))
 
     if not empty_positions:
-        # No valid moves; default to (-1, -1)
         return RandomMoveOutput(move=(-1, -1))
 
     move = random.choice(empty_positions)

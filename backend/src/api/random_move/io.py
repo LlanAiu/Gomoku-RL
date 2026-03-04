@@ -1,17 +1,15 @@
 # builtin
+from typing import Tuple
 
 # external
 from pydantic import BaseModel
-from typing import List, Tuple
 
-
-class GameState(BaseModel):
-    board: List[List[int]]
+# internal
+from src.modules import GameSnapshot
 
 
 class RandomMoveInput(BaseModel):
-    state: GameState
-
+    state: GameSnapshot
 
 class RandomMoveOutput(BaseModel):
     move: Tuple[int, int]
