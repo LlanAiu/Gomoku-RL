@@ -1,5 +1,5 @@
 # builtin
-from typing import List
+from typing import List, Optional
 
 # external
 from pydantic import BaseModel
@@ -9,3 +9,5 @@ from pydantic import BaseModel
 
 class GameSnapshot(BaseModel):
     board: List[List[int]]
+    finished: Optional[bool] = False
+    win_index: Optional[int] = -1

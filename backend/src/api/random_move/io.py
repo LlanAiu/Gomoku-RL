@@ -11,5 +11,6 @@ from src.modules import GameSnapshot
 class RandomMoveInput(BaseModel):
     state: GameSnapshot
 
+
 class RandomMoveOutput(BaseModel):
     move: Tuple[int, int]

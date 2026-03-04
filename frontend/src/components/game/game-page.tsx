@@ -2,11 +2,12 @@
 
 // external
 import { useState } from 'react';
-import './game-page.css';
 
 // internal
 import { type Board, type Move, type GameState, BOARD_SIZE, type Coordinate } from '../../lib/game/types';
 import { getRandomMove } from '../../lib/game/actions';
+import { evaluateBoard } from '../../lib/game/logic';
+import './game-page.css';
 
 
 function emptyBoard(): Board {
@@ -30,6 +31,8 @@ export default function GamePage() {
 
     async function handleClick(row: number, column: number) {
         if (thinking) return;
+        const currentEval = evaluateBoard(board);
+        if (currentEval.finished) return;
         if (board[row][column] !== 0) return;
 
         const newBoard = board.map((row) => row.slice());
@@ -38,7 +41,7 @@ export default function GamePage() {
 
         setThinking(true);
         try {
-            const state: GameState = { board: newBoard };
+            const state: GameState = { board: newBoard, finished: false, win_index: -1 };
             const move: Move = await getRandomMove(state);
             if (move[0] >= 0) {
                 const [moveRow, moveColumn] = move;
@@ -62,11 +65,17 @@ export default function GamePage() {
         };
     };
 
+    const evalState = evaluateBoard(board);
+
+    const statusText = evalState.finished
+        ? (evalState.win_index === 1 ? 'Player wins' : evalState.win_index === 2 ? 'Computer wins' : 'Draw')
+        : (thinking ? 'Computer thinking...' : '');
+
     return (
         <div className="game-root">
             <div className="game-header">
                 <button type="button" onClick={handleReset} className="game-reset">Reset</button>
-                <span className="game-status">{thinking ? 'Computer thinking...' : ''}</span>
+                <span className="game-status">{statusText}</span>
             </div>
 
             <div className="game-board-wrapper">
