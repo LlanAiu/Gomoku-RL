@@ -10,19 +10,11 @@ import numpy as np
 
 class ComputationalNode(ABC):
     
-    def __init__(self):
+    def __init__(self, learning_rate: float):
         self.input_nodes: list[ComputationalNode] = []
         self.output_nodes: list[ComputationalNode] = []
-    
-    @property 
-    @abstractmethod
-    def learning_rate(self):
-        ...
-    
-    @property
-    @abstractmethod
-    def should_update(self):
-        ...
+        self.learning_rate: float = learning_rate
+        self.should_update: bool = True
     
     def add_input_node(self, node: ComputationalNode):
         self.input_nodes.append(node)
