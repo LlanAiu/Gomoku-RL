@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 # internal
-
+from .action import Action
 
 class State(ABC):
     def __init__(self):
@@ -18,6 +18,10 @@ class State(ABC):
     
     def get_representation(self) -> np.ndarray:
         return self.representation
+    
+    @abstractmethod
+    def get_valid_actions(self) -> list[Action]:
+        pass
     
     @abstractmethod
     def _set_state_representation(self):

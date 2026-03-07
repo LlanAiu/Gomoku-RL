@@ -13,7 +13,6 @@ class EpisodicRLEnvironment(ABC):
         self.current_state: State | None = None
         
         self._setup_reward_signal()
-        self.reset()
     
     def is_episode_over(self) -> bool:
         if self.current_state is None: 
@@ -26,7 +25,7 @@ class EpisodicRLEnvironment(ABC):
         pass
     
     @abstractmethod
-    def reset(self):
+    def reset(self) -> tuple[State, float]:
         pass
     
     @abstractmethod
