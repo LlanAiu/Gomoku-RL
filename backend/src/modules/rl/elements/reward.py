@@ -11,5 +11,5 @@ from .action import Action
 class RewardSignal(ABC):
     
     @abstractmethod
-    def get_reward(state: State, action: Action) -> float:
+    def get_reward(old_state: State, new_state: State, action: Action) -> float:
         pass

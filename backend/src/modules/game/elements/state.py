@@ -70,6 +70,9 @@ class GameState(State):
     def _set_state_representation(self):
         self.representation: np.ndarray = self.board.flatten()
         
+    def get_win_index(self) -> int:
+        return self.win_index
+        
     def get_valid_actions(self) -> list[GameAction]:
         empty_positions = np.argwhere(self.board == 0)
         return [GameAction((int(row), int(col))) for row, col in empty_positions]

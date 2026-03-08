@@ -8,3 +8,14 @@ BOARD_SIZE = 15
 
 WIN_COUNT = 5
 DIRECTIONS = [(0, 1), (1, 0), (1, 1), (-1, 1)]
+
+WIN_REWARD = 10.0
+LOSS_REWARD = -5.0
+DRAW_REWARD = -1.0
+
+WIN_INDICES = {
+    "PLAYER_1": 1,
+    "PLAYER_2": 2,
+    "DRAW": 0,
+    "NONE": -1
+}
