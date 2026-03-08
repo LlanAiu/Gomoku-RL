@@ -11,7 +11,7 @@ from .action import GameAction
 
 
 class GameState(State):
-    def __init__(self, board: np.ndarray | None):
+    def __init__(self, board: np.ndarray | None = None):
         if board is None:
             self.board: np.ndarray = np.zeros((BOARD_SIZE, BOARD_SIZE))
         else: 
