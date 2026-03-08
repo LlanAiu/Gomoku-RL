@@ -20,9 +20,10 @@ class State(ABC):
         return self.representation
     
     @abstractmethod
+    def _set_state_representation(self):
+        pass    
+    
+    @abstractmethod
     def get_valid_actions(self) -> list[Action]:
         pass
     
-    @abstractmethod
-    def _set_state_representation(self):
-        pass    
