@@ -25,7 +25,7 @@ class EpisodicRLEnvironment(ABC):
         pass
     
     @abstractmethod
-    def reset(self) -> tuple[State, float]:
+    def reset(self) -> State:
         pass
     
     @abstractmethod

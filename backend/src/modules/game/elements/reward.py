@@ -10,7 +10,7 @@ from ..constants import WIN_REWARD, DRAW_REWARD, LOSS_REWARD
 
 
 class GameRewardSignal(RewardSignal):
-    def get_reward(old_state: GameState, new_state: GameState, action: GameAction) -> float:
+    def get_reward(_: GameState, new_state: GameState, action: GameAction) -> float:
         if new_state.is_terminal():
             win_index = new_state.get_win_index()
             if win_index > 0:

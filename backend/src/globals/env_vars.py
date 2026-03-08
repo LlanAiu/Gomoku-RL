@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 # internal
 
 
-class Environment(BaseSettings):
+class EnvironmentVariables(BaseSettings):
     ENV_TYPE: str
     ALLOWED_ORIGIN: str
     

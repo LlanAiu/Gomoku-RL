@@ -70,6 +70,9 @@ class GameState(State):
     def _set_state_representation(self):
         self.representation: np.ndarray = self.board.flatten()
         
+    def get_board(self) -> np.ndarray:
+        return self.board    
+        
     def get_win_index(self) -> int:
         return self.win_index
         
