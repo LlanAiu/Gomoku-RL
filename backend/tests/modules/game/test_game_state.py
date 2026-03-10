@@ -2,7 +2,6 @@ import os
 import sys
 import numpy as np
 
-# ensure backend/src is on path for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'src')))
 
 from modules.game.elements.state import GameState

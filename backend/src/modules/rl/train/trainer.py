@@ -4,9 +4,15 @@ from abc import ABC, abstractmethod
 # external
 
 # internal
+from ..environment import EpisodicRLEnvironment
+from ..agent import Agent
 
-def Trainer(ABC):
+
+class EpisodicTrainer(ABC):
     def __init__(self):
+        self.environment: EpisodicRLEnvironment | None = None
+        self.agent: Agent | None = None
+        
         self._setup_environment()
         self._setup_agent()
     
@@ -18,5 +24,21 @@ def Trainer(ABC):
     def _setup_agent():
         pass
     
+    def run_train_episode(self):
+        if self.environment is None or self.agent is None:
+            raise RuntimeError("Cannot train when environment/agent/method is not set!")
+
+        state = self.environment.reset()
+        
+        while not state.is_terminal():
+            action = self.agent.decide_train(state)
+        
+            new_state, reward = self.environment.step(action)
+
+            self.agent.improve(state, new_state, reward)
+        
+            state = new_state
     
-    
+    def train_multiple(self, num_episodes: int):
+        for _ in range(num_episodes):
+            self.run_train_episode()

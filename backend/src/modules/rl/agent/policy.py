@@ -12,13 +12,6 @@ class Policy(ABC):
     def evaluate_actions(state: State) -> list[tuple[Action, float]]:
         pass
     
-    
     @abstractmethod
     def choose_action(state: State) -> Action:
-        pass
-    
-    
-    # TODO: figure out a GPI framework
-    @abstractmethod
-    def improve_policy():
         pass
