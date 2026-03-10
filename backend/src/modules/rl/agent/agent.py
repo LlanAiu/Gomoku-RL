@@ -5,23 +5,26 @@ from abc import ABC, abstractmethod
 
 # internal
 from ..elements import State, Action
+from .policy import Policy
+from .value_function import ValueFunction
+from .optimization_method import OptimizationMethod
 
 
 class Agent(ABC):
     
     @property
     @abstractmethod
-    def policy(self):
+    def policy(self) -> Policy:
         pass
     
     @property
     @abstractmethod
-    def value_function(self):
+    def value_function(self) -> ValueFunction | None:
         pass
     
     @property
     @abstractmethod
-    def optimization_method(self):
+    def optimization_method(self) -> OptimizationMethod:
         pass
     
     @abstractmethod
@@ -32,6 +35,5 @@ class Agent(ABC):
     def decide_inference(self, state: State) -> Action:
         pass
     
-    @abstractmethod
     def improve(self, old_state: State, new_state: State, reward: float):
-        pass
+        self.optimization_method.improve_policy(old_state, new_state, reward)
