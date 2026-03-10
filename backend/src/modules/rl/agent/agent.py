@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from ..elements import State, Action
 from .policy import Policy
 from .value_function import ValueFunction
-from .optimization_method import OptimizationMethod
+from ..optimization import OptimizationMethod
 
 
 class Agent(ABC):

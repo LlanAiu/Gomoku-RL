@@ -5,8 +5,8 @@ from abc import ABC, abstractmethod
 
 # internal
 from ..elements import State
-from .policy import Policy
-from .value_function import ValueFunction
+from ..agent import Policy
+from ..agent import ValueFunction
 
 
 class OptimizationMethod(ABC):
