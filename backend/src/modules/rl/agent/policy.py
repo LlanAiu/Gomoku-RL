@@ -9,9 +9,5 @@ from ..elements import State, Action
 class Policy(ABC):
     
     @abstractmethod
-    def evaluate_actions(state: State) -> list[tuple[Action, float]]:
-        pass
-    
-    @abstractmethod
-    def choose_action(state: State) -> Action:
+    def choose_action(self, state: State) -> Action:
         pass
