@@ -2,6 +2,7 @@
 
 # external
 import numpy as np
+from pathlib import Path
 
 
 # internal
@@ -65,4 +66,19 @@ class GamePolicy(Policy):
         col = idx % BOARD_SIZE
 
         return GameAction(self.player_index, (int(row), int(col)))
+
+    def save_parameters(self, path: str) -> None:
+        p = Path(path)
+        if p.is_dir():
+            p = p / "policy_weights.npy"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        np.save(p, self.weights)
+
+    def load_parameters(self, path: str) -> None:
+        p = Path(path)
+        if p.is_dir():
+            p = p / "policy_weights.npy"
+        if not p.exists():
+            raise FileNotFoundError(f"Policy weights file not found: {p}")
+        self.weights = np.load(p)
         

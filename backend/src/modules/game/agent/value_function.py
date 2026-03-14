@@ -2,6 +2,7 @@
 
 # external
 import numpy as np
+from pathlib import Path
 
 
 # internal
@@ -33,3 +34,18 @@ class GameValueFunction(ValueFunction):
         )
         
         return player_embedding
+
+    def save_weights(self, path: str) -> None:
+        p = Path(path)
+        if p.is_dir():
+            p = p / "value_weights.npy"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        np.save(p, self.weights)
+
+    def load_weights(self, path: str) -> None:
+        p = Path(path)
+        if p.is_dir():
+            p = p / "value_weights.npy"
+        if not p.exists():
+            raise FileNotFoundError(f"Value weights file not found: {p}")
+        self.weights = np.load(p)
