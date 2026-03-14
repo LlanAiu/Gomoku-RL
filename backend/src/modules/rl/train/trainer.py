@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 
 # external
+import tqdm
 
 # internal
 from ..environment import EpisodicRLEnvironment
@@ -17,11 +18,11 @@ class EpisodicTrainer(ABC):
         self._setup_agent()
     
     @abstractmethod
-    def _setup_environment():
+    def _setup_environment(self):
         pass
     
     @abstractmethod
-    def _setup_agent():
+    def _setup_agent(self):
         pass
     
     def run_train_episode(self):
@@ -40,5 +41,5 @@ class EpisodicTrainer(ABC):
             state = new_state
     
     def train_multiple(self, num_episodes: int):
-        for _ in range(num_episodes):
+        for _ in tqdm(range(num_episodes)):
             self.run_train_episode()
