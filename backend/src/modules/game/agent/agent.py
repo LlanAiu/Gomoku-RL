@@ -57,7 +57,7 @@ class GameAgent(Agent):
 
         if self.value_function is not None:
             value_path = p / "value_weights.npy"
-            self.value_function.save_weights(value_path)
+            self.value_function.save_parameters(value_path)
 
     def load_parameters(self, weights_path: str):
         p = Path(weights_path)
@@ -70,6 +70,6 @@ class GameAgent(Agent):
         if self.value_function is not None:
             value_path = p / "value_weights.npy"
             if value_path.exists():
-                self.value_function.load_weights(value_path)
+                self.value_function.load_parameters(value_path)
             else:
                 raise FileNotFoundError(f"Value weights not found: {value_path}")
