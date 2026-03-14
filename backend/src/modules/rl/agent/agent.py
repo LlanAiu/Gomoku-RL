@@ -35,5 +35,5 @@ class Agent(ABC):
     def decide_inference(self, state: State) -> Action:
         pass
     
-    def improve(self, old_state: State, new_state: State, reward: float):
-        self.optimization_method.improve(old_state, new_state, reward)
+    def improve(self, old_state: State, action: Action, new_state: State, reward: float):
+        self.optimization_method.improve(old_state, action, new_state, reward)

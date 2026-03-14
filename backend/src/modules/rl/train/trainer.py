@@ -35,7 +35,7 @@ class EpisodicTrainer(ABC):
         
             new_state, reward = self.environment.step(action)
 
-            self.agent.improve(state, new_state, reward)
+            self.agent.improve(state, action, new_state, reward)
         
             state = new_state
     
