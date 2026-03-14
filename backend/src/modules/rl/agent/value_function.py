@@ -10,5 +10,5 @@ from ..elements import State
 class ValueFunction(ABC):
     
     @abstractmethod
-    def evaluate_state(state: State) -> float:
+    def evaluate_state(self, state: State) -> float:
         pass

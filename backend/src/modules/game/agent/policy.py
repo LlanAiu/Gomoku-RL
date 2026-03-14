@@ -11,20 +11,30 @@ from ..elements import GameState, GameAction
 
 
 class GamePolicy(Policy):
-    
     def __init__(self, player_index: int):
         self.weights = np.random.random_sample((FEATURE_IN_DIM, POLICY_OUT_DIM))
         self.player_index = player_index
         
-        
     def choose_action(self, state: GameState) -> GameAction:
-        embeddings = state.get_representation()
+        embedding = state.get_representation()
+        embedding = self._swap_player_indices(embedding)
+        preferences = self.weights @ embedding
+        
         valid_actions = state.get_valid_actions()
         action_mask = self._get_action_mask(valid_actions)
         
-        preferences = self.weights @ embeddings
-        
         return self._select_softmax(preferences, action_mask)
+    
+    def _swap_player_indices(self, state_embedding: np.ndarray) -> np.ndarray:
+        embedding_copy: np.ndarray = state_embedding.copy().astype(np.float32)
+        player = float(self.player_index)
+
+        player_embedding: np.ndarray = np.where(
+            embedding_copy == player, 1.0, 
+            np.where(embedding_copy == 0.0, 0.0, -1.0)
+        )
+        
+        return player_embedding
         
     def _get_action_mask(self, valid_actions: list[GameAction]) -> np.ndarray:
         mask = np.zeros(POLICY_OUT_DIM, dtype=np.float32)
