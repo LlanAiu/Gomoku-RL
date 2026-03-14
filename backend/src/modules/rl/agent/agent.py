@@ -36,4 +36,4 @@ class Agent(ABC):
         pass
     
     def improve(self, old_state: State, new_state: State, reward: float):
-        self.optimization_method.improve_policy(old_state, new_state, reward)
+        self.optimization_method.improve(old_state, new_state, reward)

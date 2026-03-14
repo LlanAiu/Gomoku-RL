@@ -19,7 +19,7 @@ class GamePolicy(Policy):
     def choose_action(self, state: GameState) -> GameAction:
         embedding = state.get_representation()
         embedding = self._swap_player_indices(embedding)
-        preferences = self.weights @ embedding
+        preferences = self.weights.T @ embedding
         
         valid_actions = state.get_valid_actions()
         action_mask = self._get_action_mask(valid_actions)
@@ -66,6 +66,38 @@ class GamePolicy(Policy):
         col = idx % BOARD_SIZE
 
         return GameAction(self.player_index, (int(row), int(col)))
+    
+    def update(self, update: np.ndarray):
+        self.weights += update
+        
+    def get_eligibility(self, state: GameState, action: GameAction):
+        embedding = state.get_representation()
+        embedding = self._swap_player_indices(embedding)
+        
+        preferences = self.weights.T @ embedding
+        
+        valid_actions = state.get_valid_actions()
+        action_mask = self._get_action_mask(valid_actions)
+        
+        masked_prefs = np.where(action_mask.astype(bool), preferences, -np.inf)
+
+        if np.all(np.isneginf(masked_prefs)):
+            raise ValueError("No valid actions available for selection")
+
+        max_pref = np.max(masked_prefs[np.isfinite(masked_prefs)])
+        exps = np.exp(masked_prefs - max_pref)
+        exps[np.isneginf(masked_prefs)] = 0.0
+
+        probs = exps / np.sum(exps)
+        
+        one_hot = np.zeros_like(probs)
+        row, col = action.get_move()
+        a_idx = row * BOARD_SIZE + col
+        one_hot[a_idx] = 1.0
+        
+        grad_W = np.outer(embedding, (one_hot - probs))
+        
+        return grad_W
 
     def save_parameters(self, path: str) -> None:
         p = Path(path)

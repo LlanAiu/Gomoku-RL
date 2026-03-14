@@ -17,10 +17,13 @@ class GameValueFunction(ValueFunction):
         self.player_index = player_index
     
     def evaluate_state(self, state: GameState) -> float:
+        if state.is_terminal():
+            return 0.0
+        
         embedding = state.get_representation()
         embedding = self._swap_player_indices(embedding)
         
-        predicted_value = self.weights @ embedding
+        predicted_value = self.weights.T @ embedding
         
         return predicted_value
 
@@ -34,15 +37,24 @@ class GameValueFunction(ValueFunction):
         )
         
         return player_embedding
+    
+    def update(self, update: np.ndarray):
+        self.weights += update
+        
+    def get_gradient(self, state: GameState) -> np.ndarray:
+        embedding = state.get_representation()
+        embedding = self._swap_player_indices(embedding)
+        
+        return embedding.reshape(-1, 1)
 
-    def save_weights(self, path: str) -> None:
+    def save_parameters(self, path: str) -> None:
         p = Path(path)
         if p.is_dir():
             p = p / "value_weights.npy"
         p.parent.mkdir(parents=True, exist_ok=True)
         np.save(p, self.weights)
 
-    def load_weights(self, path: str) -> None:
+    def load_parameters(self, path: str) -> None:
         p = Path(path)
         if p.is_dir():
             p = p / "value_weights.npy"
