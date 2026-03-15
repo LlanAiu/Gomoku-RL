@@ -21,7 +21,7 @@ class GamePolicy(Policy):
         embedding = self._swap_player_indices(embedding)
         preferences = self.weights.T @ embedding
         
-        valid_actions = state.get_valid_actions()
+        valid_actions = state.get_valid_actions(self.player_index)
         action_mask = self._get_action_mask(valid_actions)
         
         return self._select_softmax(preferences, action_mask)
@@ -76,7 +76,7 @@ class GamePolicy(Policy):
         
         preferences = self.weights.T @ embedding
         
-        valid_actions = state.get_valid_actions()
+        valid_actions = state.get_valid_actions(self.player_index)
         action_mask = self._get_action_mask(valid_actions)
         
         masked_prefs = np.where(action_mask.astype(bool), preferences, -np.inf)

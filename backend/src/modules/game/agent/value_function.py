@@ -24,8 +24,9 @@ class GameValueFunction(ValueFunction):
         embedding = self._swap_player_indices(embedding)
         
         predicted_value = self.weights.T @ embedding
+        print(f"Predicted Value: {predicted_value}")
         
-        return predicted_value
+        return float(predicted_value[0])
 
     def _swap_player_indices(self, state_embedding: np.ndarray) -> np.ndarray:
         embedding_copy: np.ndarray = state_embedding.copy().astype(np.float32)
@@ -45,6 +46,7 @@ class GameValueFunction(ValueFunction):
         embedding = state.get_representation()
         embedding = self._swap_player_indices(embedding)
         
+        # return column vector matching self.weights shape (FEATURE_IN_DIM, 1)
         return embedding.reshape(-1, 1)
 
     def save_parameters(self, path: str) -> None:

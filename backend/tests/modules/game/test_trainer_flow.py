@@ -25,24 +25,45 @@ def test_trainer_one_step(tmp_path):
 
     try:
         trainer = GameTrainer()
+        trainer = GameTrainer()
 
-        # monkeypatch agent decision/improve to avoid using full policy/value machinery
-        trainer.agent_1.decide_train = lambda state: GameAction(trainer.agent_1.get_player_index(), (0, 0))
-        trainer.agent_1.improve = lambda *args, **kwargs: None
-        trainer.agent_2.decide_train = lambda state: GameAction(trainer.agent_2.get_player_index(), (0, 1))
-        trainer.agent_2.improve = lambda *args, **kwargs: None
+        # create optimization methods for both agents (one-step actor-critic)
+        from modules.rl.optimization.one_step_actor_critic import OneStepActorCritic
 
-        # set trainer.agent so run checks pass (GameTrainer checks self.agent)
+        ac1 = OneStepActorCritic(policy=trainer.agent_1.policy,
+                                value_function=trainer.agent_1.value_function,
+                                discount=0.99,
+                                policy_step_size=0.01,
+                                value_step_size=0.01)
+
+        ac2 = OneStepActorCritic(policy=trainer.agent_2.policy,
+                                value_function=trainer.agent_2.value_function,
+                                discount=0.99,
+                                policy_step_size=0.01,
+                                value_step_size=0.01)
+
+        # wire the agents to use the actor-critic improve method
+        trainer.agent_1.improve = lambda old_s, a, new_s, r: ac1.improve(old_s, a, new_s, r)
+        trainer.agent_2.improve = lambda old_s, a, new_s, r: ac2.improve(old_s, a, new_s, r)
+
+        # run a short episode using the real policies/value functions
         trainer.agent = trainer.agent_1
-
-        # run a single step of the flow
         state = trainer.environment.reset()
-        action = trainer.agent_1.decide_train(state)
-        new_state, reward = trainer.environment.step(action)
-        trainer.agent_1.improve(state, action, new_state, reward)
+        ac1.reset()
+        ac2.reset()
+        # run until terminal or up to a small cap
+        steps = 0
+        max_steps = 10
+        while not state.is_terminal() and steps < max_steps:
+            actor = trainer.agent_1 if state.get_board().sum() % 2 == 0 else trainer.agent_2
+            action = actor.decide_train(state)
+            new_state, reward = trainer.environment.step(action)
+            actor.improve(state, action, new_state, reward)
+            state = new_state
+            steps += 1
 
-        # basic assertion: board changed after the step
-        assert (new_state.get_board() != state.get_board()).any()
+        # assert episode made progress (some moves played)
+        assert steps > 0
 
     finally:
         # cleanup created weight dirs

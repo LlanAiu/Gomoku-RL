@@ -19,11 +19,13 @@ class GameTrainer(EpisodicTrainer):
         self.agent_2 = GameAgent(2, "player_two")
         
     def run_train_episode(self):
-        if self.environment is None or self.agent is None:
+        if self.environment is None or self.agent_1 is None or self.agent_2 is None:
             raise RuntimeError("Cannot train when environment/agent/method is not set!")
 
         current_agent = self.agent_1
         state = self.environment.reset()
+        self.agent_1.optimization_method.reset()
+        self.agent_2.optimization_method.reset()
         
         while not state.is_terminal():
             action = current_agent.decide_train(state)

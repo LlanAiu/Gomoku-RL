@@ -5,7 +5,7 @@ from pathlib import Path
 
 # internal
 from ...rl.agent import Agent
-from ...rl.optimization import OptimizationMethod
+from ...rl.optimization import OptimizationMethod, OneStepActorCritic
 
 from .policy import GamePolicy
 from .value_function import GameValueFunction
@@ -14,7 +14,6 @@ from ..elements import GameState, GameAction
 
 
 class GameAgent(Agent):
-    
     def __init__(self, player_index: int, weights_path: str):
         super().__init__()
         self.player_index = player_index
@@ -23,6 +22,12 @@ class GameAgent(Agent):
         )
         self._value_function = GameValueFunction(
             player_index=player_index
+        )
+        
+        self._optimization_method = OneStepActorCritic(
+            self._policy,
+            self._value_function,
+            0.95, 0.1, 0.1
         )
         
         self.load_parameters(weights_path)
@@ -37,7 +42,7 @@ class GameAgent(Agent):
     
     @property
     def optimization_method(self) -> OptimizationMethod:
-        return None
+        return self._optimization_method
     
     def get_player_index(self) -> int:
         return self.player_index

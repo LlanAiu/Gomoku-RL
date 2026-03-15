@@ -76,6 +76,7 @@ class GameState(State):
     def get_win_index(self) -> int:
         return self.win_index
         
-    def get_valid_actions(self) -> list[GameAction]:
+    def get_valid_actions(self, player_index: int | None = None) -> list[GameAction]:
         empty_positions = np.argwhere(self.board == 0)
-        return [GameAction((int(row), int(col))) for row, col in empty_positions]
+        player_id = 0 if player_index is None else int(player_index)
+        return [GameAction(player_id, (int(row), int(col))) for row, col in empty_positions]

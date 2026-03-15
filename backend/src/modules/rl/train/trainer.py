@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 
 # external
-import tqdm
+from tqdm import tqdm
 
 # internal
 from ..environment import EpisodicRLEnvironment
@@ -30,6 +30,7 @@ class EpisodicTrainer(ABC):
             raise RuntimeError("Cannot train when environment/agent/method is not set!")
 
         state = self.environment.reset()
+        self.agent.optimization_method.reset()
         
         while not state.is_terminal():
             action = self.agent.decide_train(state)
