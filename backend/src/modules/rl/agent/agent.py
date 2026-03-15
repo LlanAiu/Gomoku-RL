@@ -44,4 +44,5 @@ class Agent(ABC):
         pass
     
     def improve(self, old_state: State, action: Action, new_state: State, reward: float):
-        self.optimization_method.improve(old_state, action, new_state, reward)
+        # forward to optimization method and return any diagnostics for logging
+        return self.optimization_method.improve(old_state, action, new_state, reward)

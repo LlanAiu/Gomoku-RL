@@ -1,5 +1,4 @@
 # builtin
-from pathlib import Path
 
 # external
 import numpy as np

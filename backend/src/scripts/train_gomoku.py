@@ -15,4 +15,4 @@ from src.modules.game.train import GameTrainer
 if __name__ == "__main__":
     trainer = GameTrainer("test_train")
     
-    trainer.train_multiple(1000)
+    trainer.train_multiple(3000)

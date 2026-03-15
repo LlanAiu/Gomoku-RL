@@ -33,12 +33,27 @@ class OneStepActorCritic(OptimizationMethod):
     
     def improve(self, old_state: State, action: Action, new_state: State, reward: float):
         delta = reward + self.discount * self._value_function.evaluate_state(new_state) - self._value_function.evaluate_state(old_state)
-        
+
         value_update = self.value_step_size * delta * self._value_function.get_gradient(old_state)
+        # apply value update
         self._value_function.update(value_update)
-        
+
         policy_update = self.policy_step_size * delta * self.policy_discount * self._policy.get_eligibility(old_state, action)
+        # apply policy update
         self._policy.update(policy_update)
-        
+
+        # decay for eligibility traces
         self.policy_discount *= self.discount
-        pass
+
+        # return diagnostics for logging: delta and norms of updates
+        try:
+            import numpy as _np
+            metrics = {
+                "delta": float(delta),
+                "value_update_norm": float(_np.linalg.norm(value_update)),
+                "policy_update_norm": float(_np.linalg.norm(policy_update)),
+            }
+        except Exception:
+            metrics = {"delta": float(delta)}
+
+        return metrics

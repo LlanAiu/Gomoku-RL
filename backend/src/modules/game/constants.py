@@ -4,13 +4,13 @@
 
 # internal
 
-BOARD_SIZE = 15
+BOARD_SIZE = 9
 
 WIN_COUNT = 5
 DIRECTIONS = [(0, 1), (1, 0), (1, 1), (-1, 1)]
 
-WIN_REWARD = 10.0
-LOSS_REWARD = -5.0
+WIN_REWARD = 20.0
+LOSS_REWARD = -10.0
 DRAW_REWARD = -1.0
 
 WIN_INDICES = {

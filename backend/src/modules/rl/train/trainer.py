@@ -44,8 +44,11 @@ class EpisodicTrainer(ABC):
             state = new_state
     
     def train_multiple(self, num_episodes: int):
+        self.train_episode = 1
+        
         for _ in tqdm(range(num_episodes)):
             self.run_train_episode()
+            self.train_episode += 1
             
         self.save_results()
         
