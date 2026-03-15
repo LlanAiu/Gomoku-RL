@@ -24,8 +24,7 @@ def test_trainer_one_step(tmp_path):
         created_dirs.append(p)
 
     try:
-        trainer = GameTrainer()
-        trainer = GameTrainer()
+        trainer = GameTrainer("")
 
         # create optimization methods for both agents (one-step actor-critic)
         from modules.rl.optimization.one_step_actor_critic import OneStepActorCritic

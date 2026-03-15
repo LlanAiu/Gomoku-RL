@@ -29,7 +29,7 @@ class OneStepActorCritic(OptimizationMethod):
         return self._value_function
     
     def reset(self):
-        self.policy_discount = self.discount
+        self.policy_discount = 1.0
     
     def improve(self, old_state: State, action: Action, new_state: State, reward: float):
         delta = reward + self.discount * self._value_function.evaluate_state(new_state) - self._value_function.evaluate_state(old_state)

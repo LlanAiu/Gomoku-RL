@@ -35,5 +35,13 @@ class Agent(ABC):
     def decide_inference(self, state: State) -> Action:
         pass
     
+    @abstractmethod 
+    def save_parameters(self, path: str) -> None:
+        pass
+    
+    @abstractmethod
+    def load_parameters(self, path: str) -> None:
+        pass
+    
     def improve(self, old_state: State, action: Action, new_state: State, reward: float):
         self.optimization_method.improve(old_state, action, new_state, reward)

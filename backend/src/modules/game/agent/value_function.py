@@ -24,7 +24,6 @@ class GameValueFunction(ValueFunction):
         embedding = self._swap_player_indices(embedding)
         
         predicted_value = self.weights.T @ embedding
-        print(f"Predicted Value: {predicted_value}")
         
         return float(predicted_value[0])
 
@@ -46,7 +45,6 @@ class GameValueFunction(ValueFunction):
         embedding = state.get_representation()
         embedding = self._swap_player_indices(embedding)
         
-        # return column vector matching self.weights shape (FEATURE_IN_DIM, 1)
         return embedding.reshape(-1, 1)
 
     def save_parameters(self, path: str) -> None:
@@ -63,3 +61,4 @@ class GameValueFunction(ValueFunction):
         if not p.exists():
             raise FileNotFoundError(f"Value weights file not found: {p}")
         self.weights = np.load(p)
+        print(f"Successfully loaded value weights from {p}")

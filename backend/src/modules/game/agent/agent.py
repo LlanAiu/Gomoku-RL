@@ -27,9 +27,9 @@ class GameAgent(Agent):
         self._optimization_method = OneStepActorCritic(
             self._policy,
             self._value_function,
-            0.95, 0.1, 0.1
+            0.99, 0.05, 0.05
         )
-        
+    
         self.load_parameters(weights_path)
     
     @property
@@ -53,8 +53,8 @@ class GameAgent(Agent):
     def decide_inference(self, state: GameState) -> GameAction:
         return self._policy.choose_action(state)
     
-    def save_parameters(self, weights_path: str):
-        p = Path(weights_path)
+    def save_parameters(self, path: str):
+        p = Path(path)
         p.mkdir(parents=True, exist_ok=True)
 
         policy_path = p / "policy_weights.npy"
@@ -64,17 +64,14 @@ class GameAgent(Agent):
             value_path = p / "value_weights.npy"
             self.value_function.save_parameters(value_path)
 
-    def load_parameters(self, weights_path: str):
-        p = Path(weights_path)
+    def load_parameters(self, path: str):
+        p = Path(path)
         policy_path = p / "policy_weights.npy"
+        print(f"Policy path: {policy_path}")
         if policy_path.exists():
             self.policy.load_parameters(policy_path)
-        else:
-            raise FileNotFoundError(f"Policy weights not found: {policy_path}")
 
         if self.value_function is not None:
             value_path = p / "value_weights.npy"
             if value_path.exists():
                 self.value_function.load_parameters(value_path)
-            else:
-                raise FileNotFoundError(f"Value weights not found: {value_path}")

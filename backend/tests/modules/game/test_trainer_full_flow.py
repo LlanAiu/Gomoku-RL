@@ -21,10 +21,13 @@ def test_trainer_full_end_to_end(tmp_path):
         created_dirs.append(p)
 
     try:
-        trainer = GameTrainer()
+        trainer = GameTrainer("what")
+        p = Path.cwd() / "what"
+        created_dirs.append(p)
 
         steps = 10
         trainer.train_multiple(steps)
+        
 
     finally:
         # cleanup created weight dirs

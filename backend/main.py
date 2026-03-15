@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # internal
 from src.globals import EnvironmentVariables
-from src.api import random_move_router
+from src.api import random_move_router, ai_move_router
 
 
 env_vars: EnvironmentVariables = EnvironmentVariables()
@@ -32,3 +32,4 @@ async def read_root() -> dict[str, str]:
     return {"Hello": "World"}
 
 app.include_router(router=random_move_router)
+app.include_router(router=ai_move_router)

@@ -113,4 +113,5 @@ class GamePolicy(Policy):
         if not p.exists():
             raise FileNotFoundError(f"Policy weights file not found: {p}")
         self.weights = np.load(p)
+        print(f"Successfully loaded policy weights from {p}")
         

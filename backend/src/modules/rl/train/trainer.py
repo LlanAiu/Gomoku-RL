@@ -10,9 +10,11 @@ from ..agent import Agent
 
 
 class EpisodicTrainer(ABC):
-    def __init__(self):
+    def __init__(self, save_path: str):
         self.environment: EpisodicRLEnvironment | None = None
         self.agent: Agent | None = None
+        
+        self.save_path = save_path
         
         self._setup_environment()
         self._setup_agent()
@@ -44,3 +46,8 @@ class EpisodicTrainer(ABC):
     def train_multiple(self, num_episodes: int):
         for _ in tqdm(range(num_episodes)):
             self.run_train_episode()
+            
+        self.save_results()
+        
+    def save_results(self):
+        self.agent.save_parameters(self.save_path)
