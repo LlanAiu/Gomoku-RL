@@ -13,7 +13,7 @@ from ..elements import GameState, GameAction
 
 class GamePolicy(Policy):
     def __init__(self, player_index: int):
-        self.weights = np.random.random_sample((FEATURE_IN_DIM, POLICY_OUT_DIM))
+        self.weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
         self.player_index = player_index
         
     def choose_action(self, state: GameState) -> GameAction:

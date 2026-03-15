@@ -27,7 +27,7 @@ class GameAgent(Agent):
         self._optimization_method = OneStepActorCritic(
             self._policy,
             self._value_function,
-            0.99, 0.05, 0.05
+            0.99, 0.02, 0.02
         )
     
         self.load_parameters(weights_path)
@@ -57,21 +57,22 @@ class GameAgent(Agent):
         p = Path(path)
         p.mkdir(parents=True, exist_ok=True)
 
-        policy_path = p / "policy_weights.npy"
-        self.policy.save_parameters(policy_path)
+
+        self.policy.save_parameters(p)
 
         if self.value_function is not None:
-            value_path = p / "value_weights.npy"
-            self.value_function.save_parameters(value_path)
+            self.value_function.save_parameters(p)
 
     def load_parameters(self, path: str):
         p = Path(path)
-        policy_path = p / "policy_weights.npy"
-        print(f"Policy path: {policy_path}")
-        if policy_path.exists():
-            self.policy.load_parameters(policy_path)
+        print(f"Loading parameters from: {p}")
+        try:
+            self.policy.load_parameters(p)
+        except FileNotFoundError:
+            pass
 
         if self.value_function is not None:
-            value_path = p / "value_weights.npy"
-            if value_path.exists():
-                self.value_function.load_parameters(value_path)
+            try:
+                self.value_function.load_parameters(p)
+            except FileNotFoundError:
+                pass

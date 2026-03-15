@@ -13,7 +13,7 @@ from ..constants import FEATURE_IN_DIM
 
 class GameValueFunction(ValueFunction):
     def __init__(self, player_index: int):
-        self.weights = np.random.random_sample((FEATURE_IN_DIM, 1))
+        self.weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, 1)).astype(np.float32)
         self.player_index = player_index
     
     def evaluate_state(self, state: GameState) -> float:
@@ -60,5 +60,5 @@ class GameValueFunction(ValueFunction):
             p = p / "value_weights.npy"
         if not p.exists():
             raise FileNotFoundError(f"Value weights file not found: {p}")
-        self.weights = np.load(p)
+        self.weights = np.load(p).astype(np.float32)
         print(f"Successfully loaded value weights from {p}")
