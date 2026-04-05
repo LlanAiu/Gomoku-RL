@@ -34,7 +34,7 @@ class OneStepActorCritic(PolicyGradientMethod):
         return self._value_function
     
     def reset(self):
-        self.policy_discount = 1.0
+        self._policy_discount = 1.0
     
     def improve(self, old_state: State, action: Action, new_state: State, reward: float):
         value_previous = self._value_function.evaluate_state(old_state)
@@ -51,7 +51,7 @@ class OneStepActorCritic(PolicyGradientMethod):
         policy_update = self.policy_step_size * delta * self.policy_discount * self._policy.get_eligibility(old_state, action)
         self._policy.update(policy_update)
 
-        self.policy_discount *= self._discount
+        self._policy_discount *= self._discount
 
         try:
             import numpy as _np

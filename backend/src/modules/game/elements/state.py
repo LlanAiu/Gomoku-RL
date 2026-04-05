@@ -67,8 +67,19 @@ class GameState(State):
         back_col = col - d_col
         return not (self._in_bounds(back_row, back_col) and int(self.board[back_row, back_col]) == player)
     
+    def get_representation(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        return super().get_representation()
+    
     def _set_state_representation(self):
-        self.representation: np.ndarray = self.board.flatten()
+        flattened = self.board.flatten()
+        
+        player_1_pieces = np.where(flattened == 1, 1.0, 0.0).astype(dtype=np.float32)
+        player_2_pieces = np.where(flattened == 2, 1.0, 0.0).astype(dtype=np.float32)
+        
+        empty = np.any(flattened).astype(dtype=np.float32)
+        empty = np.expand_dims(empty, axis=0)
+        
+        self.representation: tuple[np.ndarray, np.ndarray, np.ndarray] = (empty, player_1_pieces, player_2_pieces)
         
     def get_board(self) -> np.ndarray:
         return self.board    

@@ -24,30 +24,28 @@ class GameValueFunction(ValueFunction):
         if state.is_terminal():
             return 0.0
         
-        embedding = state.get_representation()
-        embedding = self._swap_player_indices(embedding)
+        empty, player_1, player_2 = state.get_representation()
+        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
         
+        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
         predicted_value = self._weights.T @ embedding
         
         return float(predicted_value[0])
 
-    def _swap_player_indices(self, state_embedding: np.ndarray) -> np.ndarray:
-        embedding_copy: np.ndarray = state_embedding.copy().astype(np.float32)
-        player = float(self._player_index)
-
-        player_embedding: np.ndarray = np.where(
-            embedding_copy == player, 1.0, 
-            np.where(embedding_copy == 0.0, 0.0, -1.0)
-        )
-        
-        return player_embedding
+    def _get_player_representation(self, empty: np.ndarray, player_1: np.ndarray, player_2: np.ndarray) -> np.ndarray:
+        if self._player_index == 1:
+            return np.concatenate([empty, player_1, player_2])
+        else:
+            return np.concatenate([empty, player_2, player_1])
     
     def update(self, update: np.ndarray):
         self._weights += update
         
     def get_gradient(self, state: GameState) -> np.ndarray:
-        embedding = state.get_representation()
-        embedding = self._swap_player_indices(embedding)
+        empty, player_1, player_2 = state.get_representation()
+        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
+        
+        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
         
         return embedding.reshape(-1, 1)
 

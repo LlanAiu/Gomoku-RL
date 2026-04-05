@@ -4,7 +4,6 @@
 import numpy as np
 from pathlib import Path
 
-
 # internal
 from ...rl.agent import ParametrizedPolicy
 from ..constants import FEATURE_IN_DIM, POLICY_OUT_DIM, BOARD_SIZE
@@ -21,8 +20,11 @@ class GameParametrizedPolicy(ParametrizedPolicy):
         self._player_index = player_index
         
     def choose_action(self, state: GameState) -> GameAction:
-        embedding = state.get_representation()
-        embedding = self._swap_player_indices(embedding)
+        
+        empty, player_1, player_2 = state.get_representation()
+        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
+        
+        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
         preferences = self._weights.T @ embedding
         
         valid_actions = state.get_valid_actions(self._player_index)
@@ -30,16 +32,11 @@ class GameParametrizedPolicy(ParametrizedPolicy):
         
         return self._select_softmax(preferences, action_mask)
     
-    def _swap_player_indices(self, state_embedding: np.ndarray) -> np.ndarray:
-        embedding_copy: np.ndarray = state_embedding.copy().astype(np.float32)
-        player = float(self._player_index)
-
-        player_embedding: np.ndarray = np.where(
-            embedding_copy == player, 1.0, 
-            np.where(embedding_copy == 0.0, 0.0, -1.0)
-        )
-        
-        return player_embedding
+    def _get_player_representation(self, empty: np.ndarray, player_1: np.ndarray, player_2: np.ndarray) -> np.ndarray:
+        if self._player_index == 1:
+            return np.concatenate([empty, player_1, player_2])
+        else:
+            return np.concatenate([empty, player_2, player_1])
         
     def _get_action_mask(self, valid_actions: list[GameAction]) -> np.ndarray:
         mask = np.zeros(POLICY_OUT_DIM, dtype=np.float32)
@@ -75,8 +72,10 @@ class GameParametrizedPolicy(ParametrizedPolicy):
         self._weights += update
         
     def get_eligibility(self, state: GameState, action: GameAction):
-        embedding = state.get_representation()
-        embedding = self._swap_player_indices(embedding)
+        empty, player_1, player_2 = state.get_representation()
+        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
+        
+        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
         
         preferences = self._weights.T @ embedding
         
@@ -95,9 +94,8 @@ class GameParametrizedPolicy(ParametrizedPolicy):
         probs = exps / np.sum(exps)
         
         one_hot = np.zeros_like(probs)
-        row, col = action.get_move()
-        a_idx = row * BOARD_SIZE + col
-        one_hot[a_idx] = 1.0
+        index = action.get_flattened_index()
+        one_hot[index] = 1.0
         
         grad_W = np.outer(embedding, (one_hot - probs))
         

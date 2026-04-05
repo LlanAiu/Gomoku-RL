@@ -37,7 +37,7 @@ class GameAgent(Agent):
             self._optimization_method = OneStepTDActionValue(
                 policy=self._policy, 
                 q_function=self._q_function, 
-                discount=0.99, 
+                discount=1.0, 
                 step_size=0.02
             )
             self._value_function = None
@@ -47,7 +47,7 @@ class GameAgent(Agent):
             self._optimization_method = OneStepActorCritic(
                 policy=self._policy, 
                 value_function=self._value_function, 
-                discount=0.99, 
+                discount=1.0, 
                 policy_step_size=0.02, 
                 value_step_size=0.02
             )

@@ -4,6 +4,7 @@
 
 # internal
 from ...rl.elements import Action
+from ..constants import BOARD_SIZE
 
 
 class GameAction(Action):
@@ -17,3 +18,7 @@ class GameAction(Action):
     
     def get_move(self) -> tuple[int, int]:
         return self.move
+    
+    def get_flattened_index(self) -> int:
+        row, col = self.move
+        return row * BOARD_SIZE + col

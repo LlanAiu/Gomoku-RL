@@ -13,7 +13,7 @@ from ..constants import FEATURE_IN_DIM, POLICY_OUT_DIM, BOARD_SIZE
 class GameQFunction(ActionValueFunction):
     def __init__(self, player_index: int):
         super().__init__()
-        self._weights = np.random.uniform(0.02, 0.2, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
+        self._weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, 1)).astype(np.float32)
         self._player_index = player_index
         
     def set_player_index(self, player_index: int):
@@ -23,35 +23,36 @@ class GameQFunction(ActionValueFunction):
         if state.is_terminal():
             return 0.0
 
-        embedding = state.get_representation()
-        embedding = self._swap_player_indices(embedding)
+        empty, player_1, player_2 = state.get_representation()
+        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
+        
+        index = action.get_flattened_index()
+        if self._player_index == 1:
+            player_1_copy[index] = 1.0
+        else:
+            player_2_copy[index] = 1.0
+        
+        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
+        value = self._weights.T @ embedding
 
-        row, col = action.get_move()
-        idx = row * BOARD_SIZE + col
-        sim_embedding = embedding.copy()
-        sim_embedding[idx] = 1.0
+        return float(value[0])
 
-        prefs = self._weights.T @ sim_embedding
-
-        return float(prefs[idx])
-
+    def _get_player_representation(self, empty: np.ndarray, player_1: np.ndarray, player_2: np.ndarray) -> np.ndarray:
+        if self._player_index == 1:
+            return np.concatenate([empty, player_1, player_2])
+        else:
+            return np.concatenate([empty, player_2, player_1])
+        
     def evaluate_all_actions(self, state: GameState) -> np.ndarray:
         if state.is_terminal():
             return np.full(POLICY_OUT_DIM, -np.inf, dtype=np.float32)
-
-        embedding = state.get_representation()
-        embedding = self._swap_player_indices(embedding)
 
         prefs_masked = np.full(POLICY_OUT_DIM, -np.inf, dtype=np.float32)
 
         valid_actions = state.get_valid_actions(self._player_index)
         for a in valid_actions:
-            r, c = a.get_move()
-            idx = r * BOARD_SIZE + c
-            sim_embedding = embedding.copy()
-            sim_embedding[idx] = 1.0
-            val = float((self._weights.T @ sim_embedding).flatten()[idx])
-            prefs_masked[idx] = val
+            index = a.get_flattened_index()
+            prefs_masked[index] = self.evaluate(state, a)
 
         return prefs_masked
 
@@ -59,31 +60,18 @@ class GameQFunction(ActionValueFunction):
         self._weights += update
 
     def get_gradient(self, state: GameState, action: GameAction) -> np.ndarray:
-        embedding = state.get_representation()
-        embedding = self._swap_player_indices(embedding)
-
-        row, col = action.get_move()
-        a_idx = row * BOARD_SIZE + col
-        sim_embedding = embedding.copy()
-        sim_embedding[a_idx] = 1.0
-
-        one_hot = np.zeros(POLICY_OUT_DIM, dtype=np.float32)
-        one_hot[a_idx] = 1.0
-
-        grad_W = np.outer(sim_embedding, one_hot)
-
-        return grad_W
-
-    def _swap_player_indices(self, state_embedding: np.ndarray) -> np.ndarray:
-        embedding_copy: np.ndarray = state_embedding.copy().astype(np.float32)
-        player = float(self._player_index)
-
-        player_embedding: np.ndarray = np.where(
-            embedding_copy == player, 1.0,
-            np.where(embedding_copy == 0.0, 0.0, -1.0)
-        )
-
-        return player_embedding
+        empty, player_1, player_2 = state.get_representation()
+        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
+        
+        index = action.get_flattened_index()
+        if self._player_index == 1:
+            player_1_copy[index] = 1.0
+        else:
+            player_2_copy[index] = 1.0
+        
+        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
+        
+        return embedding.reshape(-1, 1)
 
     def save_parameters(self, path: str) -> None:
         p = Path(path)
