@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: Game UI elements */
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: Non-index keys unnecessary for board elements */
 // builtin
 
 // external
@@ -80,6 +82,7 @@ export default function GamePage() {
 
             <div className="game-board-wrapper">
                 <svg className="game-svg" width={SVG_SIZE} height={SVG_SIZE}>
+                    <title>Game Board</title>
                     {[...Array(GRID_SIZE)].map((_, i) => {
                         const pos = MARGIN + i * SPACING;
                         return (

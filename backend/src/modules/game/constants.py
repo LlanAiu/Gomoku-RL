@@ -4,4 +4,21 @@
 
 # internal
 
-BOARD_SIZE = 15
+BOARD_SIZE = 9
+
+WIN_COUNT = 5
+DIRECTIONS = [(0, 1), (1, 0), (1, 1), (-1, 1)]
+
+WIN_REWARD = 20.0
+LOSS_REWARD = -10.0
+DRAW_REWARD = -1.0
+
+WIN_INDICES = {
+    "PLAYER_1": 1,
+    "PLAYER_2": 2,
+    "DRAW": 0,
+    "NONE": -1
+}
+
+FEATURE_IN_DIM = BOARD_SIZE * BOARD_SIZE
+POLICY_OUT_DIM = BOARD_SIZE * BOARD_SIZE

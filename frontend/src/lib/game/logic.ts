@@ -47,8 +47,8 @@ export function evaluateBoard(board: Board): WinnerResult {
             if (!player) continue;
 
             for (const [deltaRow, deltaCol] of DIRECTIONS) {
-                let backRow = row - deltaRow;
-                let backCol = col - deltaCol;
+                const backRow = row - deltaRow;
+                const backCol = col - deltaCol;
                 if (inBounds(board, backRow, backCol) && board[backRow][backCol] === player) {
                     continue;
                 }
