@@ -30,17 +30,26 @@ class GameAgent(Agent):
         if mode == "action_value":
             self._q_function = GameQFunction(player_index=player_index)
             self._policy = GameEpsilonGreedyPolicy(
-                player_index=player_index, q_function=self._q_function, epsilon=0.1
+                player_index=player_index, 
+                q_function=self._q_function, 
+                epsilon=0.1
             )
             self._optimization_method = OneStepTDActionValue(
-                self._policy, self._q_function, 0.99, 0.02, off_policy=True
+                policy=self._policy, 
+                q_function=self._q_function, 
+                discount=0.99, 
+                step_size=0.02
             )
             self._value_function = None
         else:
             self._policy = GameParametrizedPolicy(player_index=player_index)
             self._value_function = GameValueFunction(player_index=player_index)
             self._optimization_method = OneStepActorCritic(
-                self._policy, self._value_function, 0.99, 0.02, 0.02
+                policy=self._policy, 
+                value_function=self._value_function, 
+                discount=0.99, 
+                policy_step_size=0.02, 
+                value_step_size=0.02
             )
             self._q_function = None
 

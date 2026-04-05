@@ -1,3 +1,5 @@
 from .optimization_method import OptimizationMethod
-from .one_step_actor_critic import OneStepActorCritic
-from .one_step_td_action_value import OneStepTDActionValue
+from .policy_gradient.policy_gradient_method import PolicyGradientMethod
+from .policy_gradient.one_step_actor_critic import OneStepActorCritic
+from .action_value.action_value_method import ActionValueMethod
+from .action_value.one_step_td_action_value import OneStepTDActionValue

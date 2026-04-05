@@ -13,7 +13,7 @@ from ..constants import FEATURE_IN_DIM, POLICY_OUT_DIM, BOARD_SIZE
 class GameQFunction(ActionValueFunction):
     def __init__(self, player_index: int):
         super().__init__()
-        self._weights = np.random.uniform(0.05, 0.2, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
+        self._weights = np.random.uniform(0.02, 0.2, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
         self._player_index = player_index
 
     def evaluate(self, state: GameState, action: GameAction) -> float:

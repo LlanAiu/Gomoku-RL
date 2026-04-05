@@ -3,12 +3,12 @@
 # external
 
 # internal
-from ..elements import State, Action
-from ..agent import Policy, ValueFunction
-from .optimization_method import OptimizationMethod
+from ...elements import State, Action
+from ...agent import Policy, ValueFunction
+from .policy_gradient_method import PolicyGradientMethod
 
 
-class OneStepActorCritic(OptimizationMethod):
+class OneStepActorCritic(PolicyGradientMethod):
     
     def __init__(
         self, 
@@ -18,13 +18,11 @@ class OneStepActorCritic(OptimizationMethod):
         policy_step_size: float, 
         value_step_size: float
     ):
-        super().__init__()
+        super().__init__(discount, policy_step_size)
         
         self._policy = policy
         self._value_function = value_function
         
-        self.discount = discount
-        self.policy_step_size = policy_step_size
         self.value_step_size = value_step_size
         
     @property
@@ -39,20 +37,22 @@ class OneStepActorCritic(OptimizationMethod):
         self.policy_discount = 1.0
     
     def improve(self, old_state: State, action: Action, new_state: State, reward: float):
-        delta = reward + self.discount * self._value_function.evaluate_state(new_state) - self._value_function.evaluate_state(old_state)
+        value_previous = self._value_function.evaluate_state(old_state)
+        if new_state.is_terminal():
+            target = reward
+        else:
+            target = reward + self.discount * self._value_function.evaluate_state(new_state)
+        
+        delta = target - value_previous
 
         value_update = self.value_step_size * delta * self._value_function.get_gradient(old_state)
-        # apply value update
         self._value_function.update(value_update)
 
         policy_update = self.policy_step_size * delta * self.policy_discount * self._policy.get_eligibility(old_state, action)
-        # apply policy update
         self._policy.update(policy_update)
 
-        # decay for eligibility traces
         self.policy_discount *= self.discount
 
-        # return diagnostics for logging: delta and norms of updates
         try:
             import numpy as _np
             metrics = {
