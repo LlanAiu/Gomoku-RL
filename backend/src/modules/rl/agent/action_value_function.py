@@ -8,18 +8,13 @@ import numpy as np
 from ..elements import State, Action
 
 
-class QFunction(ABC):
+class ActionValueFunction(ABC):
     @abstractmethod
     def evaluate(self, state: State, action: Action) -> float:
         pass
 
     @abstractmethod
     def evaluate_all_actions(self, state: State) -> np.ndarray:
-        """Return an array of action-values for all output actions.
-
-        Implementations may place -inf for invalid actions so that callers
-        can safely take max over the returned array.
-        """
         pass
 
     @abstractmethod
@@ -31,9 +26,9 @@ class QFunction(ABC):
         pass
 
     @abstractmethod
-    def save_parameters(self, path: str) -> None:
+    def save_parameters(self, path: str):
         pass
 
     @abstractmethod
-    def load_parameters(self, path: str) -> None:
+    def load_parameters(self, path: str):
         pass

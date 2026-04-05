@@ -6,13 +6,14 @@ from pathlib import Path
 
 
 # internal
-from ...rl.agent import Policy
+from ...rl.agent import ParametrizedPolicy
 from ..constants import FEATURE_IN_DIM, POLICY_OUT_DIM, BOARD_SIZE
 from ..elements import GameState, GameAction
 
 
-class GamePolicy(Policy):
+class GameParametrizedPolicy(ParametrizedPolicy):
     def __init__(self, player_index: int):
+        super().__init__()
         self.weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
         self.player_index = player_index
         
@@ -99,14 +100,14 @@ class GamePolicy(Policy):
         
         return grad_W
 
-    def save_parameters(self, path: str) -> None:
+    def save_parameters(self, path: str):
         p = Path(path)
         if p.is_dir():
             p = p / "policy_weights.npy"
         p.parent.mkdir(parents=True, exist_ok=True)
         np.save(p, self.weights)
 
-    def load_parameters(self, path: str) -> None:
+    def load_parameters(self, path: str):
         p = Path(path)
         if p.is_dir():
             p = p / "policy_weights.npy"

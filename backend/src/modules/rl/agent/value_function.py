@@ -23,9 +23,9 @@ class ValueFunction(ABC):
         pass
     
     @abstractmethod
-    def save_parameters(self, path: str) -> None:
+    def save_parameters(self, path: str):
         pass
     
     @abstractmethod
-    def load_parameters(self, path: str) -> None:
+    def load_parameters(self, path: str):
         pass

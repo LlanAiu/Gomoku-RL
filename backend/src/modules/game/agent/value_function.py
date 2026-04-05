@@ -13,6 +13,7 @@ from ..constants import FEATURE_IN_DIM
 
 class GameValueFunction(ValueFunction):
     def __init__(self, player_index: int):
+        super().__init__()
         self.weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, 1)).astype(np.float32)
         self.player_index = player_index
     
@@ -47,14 +48,14 @@ class GameValueFunction(ValueFunction):
         
         return embedding.reshape(-1, 1)
 
-    def save_parameters(self, path: str) -> None:
+    def save_parameters(self, path: str):
         p = Path(path)
         if p.is_dir():
             p = p / "value_weights.npy"
         p.parent.mkdir(parents=True, exist_ok=True)
         np.save(p, self.weights)
 
-    def load_parameters(self, path: str) -> None:
+    def load_parameters(self, path: str):
         p = Path(path)
         if p.is_dir():
             p = p / "value_weights.npy"

@@ -1,7 +1,6 @@
 # builtin
 
 # external
-import numpy as np
 
 # internal
 from ...rl.elements import Action
@@ -9,6 +8,7 @@ from ...rl.elements import Action
 
 class GameAction(Action):
     def __init__(self, player_index: int, move: tuple[int, int]):
+        super().__init__()
         self.player_index: int = player_index
         self.move: tuple[int] = move
         

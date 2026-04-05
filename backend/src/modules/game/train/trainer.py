@@ -1,5 +1,6 @@
 # builtin
 import os
+from typing import Literal
 
 # external
 
@@ -10,10 +11,10 @@ from ..agent import GameAgent
 from ...log.logger import Logger
 
 class GameTrainer(EpisodicTrainer):
-    def __init__(self, save_path: str, mode: str):
-        self.mode = mode
+    def __init__(self, save_path: str, mode: Literal["policy", "action_value"]):
+        self.mode: Literal["policy", "action_value"] = mode
         super().__init__(save_path)
-        # create logger for this trainer (logs saved under save_path/logs)
+        
         self.logger = Logger.get_instance(save_dir=os.path.join(self.save_path, "logs"))
 
     def _setup_environment(self):
@@ -31,7 +32,7 @@ class GameTrainer(EpisodicTrainer):
         state = self.environment.reset()
         self.agent_1.optimization_method.reset()
         self.agent_2.optimization_method.reset()
-        # per-player cumulative rewards for this episode
+        
         agent_rewards = {self.agent_1.get_player_index(): 0.0,
                  self.agent_2.get_player_index(): 0.0}
         step_count = 0

@@ -10,7 +10,14 @@ from .optimization_method import OptimizationMethod
 
 class OneStepActorCritic(OptimizationMethod):
     
-    def __init__(self, policy: Policy, value_function: ValueFunction, discount: float, policy_step_size: float, value_step_size: float):
+    def __init__(
+        self, 
+        policy: Policy, 
+        value_function: ValueFunction, 
+        discount: float, 
+        policy_step_size: float, 
+        value_step_size: float
+    ):
         super().__init__()
         
         self._policy = policy

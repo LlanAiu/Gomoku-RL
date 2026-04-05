@@ -10,20 +10,6 @@ from .optimization_method import OptimizationMethod
 
 
 class OneStepTDActionValue(OptimizationMethod):
-    """One-step TD(0) update for action-value function approximators.
-
-    This optimizer supports two modes:
-    - on_policy (SARSA): uses the provided `policy` to sample the next action
-      and bootstraps from Q(new_state, next_action).
-    - off_policy (Q-learning): bootstraps from max_a' Q(new_state, a').
-
-    The `q_function` passed in is expected to implement the following methods:
-    - `evaluate(state, action) -> float`
-    - `get_gradient(state, action) -> np.ndarray` (shape matching parameters)
-    - `update(update: np.ndarray)` to apply parameter updates
-    - optional: `save_parameters` / `load_parameters` if persistence is needed
-    """
-
     def __init__(
         self,
         policy: Policy | None,
