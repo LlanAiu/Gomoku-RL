@@ -1,6 +1,7 @@
 # builtin
 
 # external
+import numpy as np
 
 # internal
 from ...elements import State, Action
@@ -9,7 +10,6 @@ from .policy_gradient_method import PolicyGradientMethod
 
 
 class OneStepActorCritic(PolicyGradientMethod):
-    
     def __init__(
         self, 
         policy: Policy, 
@@ -36,7 +36,7 @@ class OneStepActorCritic(PolicyGradientMethod):
     def reset(self):
         self._policy_discount = 1.0
     
-    def improve(self, old_state: State, action: Action, new_state: State, reward: float):
+    def improve(self, old_state: State, action: Action, new_state: State, reward: float) -> dict:
         value_previous = self._value_function.evaluate_state(old_state)
         if new_state.is_terminal():
             target = reward
@@ -54,11 +54,10 @@ class OneStepActorCritic(PolicyGradientMethod):
         self._policy_discount *= self._discount
 
         try:
-            import numpy as _np
             metrics = {
                 "delta": float(delta),
-                "value_update_norm": float(_np.linalg.norm(value_update)),
-                "policy_update_norm": float(_np.linalg.norm(policy_update)),
+                "value_update_norm": float(np.linalg.norm(value_update)),
+                "policy_update_norm": float(np.linalg.norm(policy_update)),
             }
         except Exception:
             metrics = {"delta": float(delta)}

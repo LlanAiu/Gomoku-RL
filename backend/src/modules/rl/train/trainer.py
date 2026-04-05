@@ -1,20 +1,23 @@
 # builtin
 from abc import ABC, abstractmethod
+import os
 
 # external
 from tqdm import tqdm
 
 # internal
+from ...log import Logger
 from ..environment import EpisodicRLEnvironment
 from ..agent import Agent
 
 
 class EpisodicTrainer(ABC):
     def __init__(self, save_path: str):
-        self.environment: EpisodicRLEnvironment | None = None
-        self.agent: Agent | None = None
+        self._environment: EpisodicRLEnvironment | None = None
+        self._agent: Agent | None = None
         
-        self.save_path = save_path
+        self._save_path = save_path
+        self._logger = Logger.get_instance(save_dir=os.path.join(self._save_path, "logs"))
         
         self._setup_environment()
         self._setup_agent()
@@ -27,21 +30,44 @@ class EpisodicTrainer(ABC):
     def _setup_agent(self):
         pass
     
+    @abstractmethod
+    def _before_episode(self):
+        pass
+    
+    @abstractmethod
+    def _after_step(self):
+        pass
+    
+    @abstractmethod
+    def _after_episode(self):
+        pass
+    
     def run_train_episode(self):
-        if self.environment is None or self.agent is None:
+        if self._environment is None or self._agent is None:
             raise RuntimeError("Cannot train when environment/agent/method is not set!")
-
-        state = self.environment.reset()
-        self.agent.optimization_method.reset()
+        
+        state = self._environment.reset()
+        self._agent.reset()
+        step_count = 0
+        
+        self._before_episode()
         
         while not state.is_terminal():
-            action = self.agent.decide_train(state)
+            action = self._agent.decide_train(state)
         
-            new_state, reward = self.environment.step(action)
+            new_state, reward = self._environment.step(action)
 
-            self.agent.improve(state, action, new_state, reward)
+            diagnostics = self._agent.improve(state, action, new_state, reward)
+            self._logger.log_dict(diagnostics, episode=self.train_episode, timestep=step_count)
         
             state = new_state
+            step_count += 1
+            
+            self._after_step()
+        
+        self._logger.log_scalar("episode_length", step_count, episode=self.train_episode)
+        
+        self._after_episode()
     
     def train_multiple(self, num_episodes: int):
         self.train_episode = 1
@@ -53,4 +79,7 @@ class EpisodicTrainer(ABC):
         self.save_results()
         
     def save_results(self):
-        self.agent.save_parameters(self.save_path)
+        self._agent.save_parameters(self._save_path)
+        
+        self._logger.save_csv()
+        self._logger.plot(rolling_window=5)

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 # external
+import numpy as np
 
 # internal
 from ...elements import State, Action
@@ -33,7 +34,7 @@ class OneStepTDActionValue(ActionValueMethod):
     def reset(self):
         return
 
-    def improve(self, old_state: State, action: Action, new_state: State, reward: float):
+    def improve(self, old_state: State, action: Action, new_state: State, reward: float) -> dict:
         q_previous = float(self._q_function.evaluate(old_state, action))
 
         if new_state.is_terminal():
@@ -50,11 +51,9 @@ class OneStepTDActionValue(ActionValueMethod):
         self._q_function.update(q_update)
 
         try:
-            import numpy as _np
-
             metrics = {
                 "delta": float(delta),
-                "q_update_norm": float(_np.linalg.norm(q_update)),
+                "q_update_norm": float(np.linalg.norm(q_update)),
             }
         except Exception:
             metrics = {"delta": float(delta)}

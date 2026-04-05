@@ -7,7 +7,7 @@ from pathlib import Path
 # internal
 from ...rl.agent.action_value_function import ActionValueFunction
 from ..elements import GameState, GameAction
-from ..constants import FEATURE_IN_DIM, POLICY_OUT_DIM, BOARD_SIZE
+from ..constants import FEATURE_IN_DIM, POLICY_OUT_DIM
 
 
 class GameQFunction(ActionValueFunction):

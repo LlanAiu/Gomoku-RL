@@ -26,5 +26,5 @@ class OptimizationMethod(ABC):
         pass
     
     @abstractmethod
-    def improve(self, old_state: State, action: Action, new_state: State, reward: float):
+    def improve(self, old_state: State, action: Action, new_state: State, reward: float) -> dict:
         pass

@@ -1,15 +1,3 @@
-"""Lightweight training logger with CSV export and plotting.
-
-Usage:
-  from modules.log.logger import Logger
-  logger = Logger.get_instance(save_dir="./logs")
-  logger.log_scalar("episode_reward", 1.23)
-  logger.log_dict({"loss": 0.5, "accuracy": 0.8})
-  logger.plot()  # saves plots to the save_dir
-
-Install: pip install numpy matplotlib
-"""
-
 import csv
 import os
 import threading

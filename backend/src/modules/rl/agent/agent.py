@@ -52,5 +52,5 @@ class Agent(ABC):
     def reset(self):
         self.optimization_method.reset()
     
-    def improve(self, old_state: State, action: Action, new_state: State, reward: float):
+    def improve(self, old_state: State, action: Action, new_state: State, reward: float) -> dict:
         return self.optimization_method.improve(old_state, action, new_state, reward)
