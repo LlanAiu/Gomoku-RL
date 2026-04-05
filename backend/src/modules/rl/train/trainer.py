@@ -79,7 +79,7 @@ class EpisodicTrainer(ABC):
         self.save_results()
         
     def save_results(self):
-        self._agent.save_parameters(self._save_path)
+        self._agent.save_parameters(f"{self._save_path}/parameters")
         
         self._logger.save_csv()
         self._logger.plot(rolling_window=5)

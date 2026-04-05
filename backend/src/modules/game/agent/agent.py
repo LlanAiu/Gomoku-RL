@@ -32,13 +32,13 @@ class GameAgent(Agent):
             self._policy = GameEpsilonGreedyPolicy(
                 player_index=player_index, 
                 q_function=self._q_function, 
-                epsilon=0.1
+                epsilon=0.05
             )
             self._optimization_method = OneStepTDActionValue(
                 policy=self._policy, 
                 q_function=self._q_function, 
                 discount=1.0, 
-                step_size=0.02
+                step_size=0.005
             )
             self._value_function = None
         else:
