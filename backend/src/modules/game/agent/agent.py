@@ -32,13 +32,15 @@ class GameAgent(Agent):
             self._policy = GameEpsilonGreedyPolicy(
                 player_index=player_index, 
                 q_function=self._q_function, 
-                epsilon=0.05
+                epsilon=0.2,
+                epsilon_min=0.01,
+                epsilon_decay=0.999
             )
             self._optimization_method = OneStepTDActionValue(
                 policy=self._policy, 
                 q_function=self._q_function, 
-                discount=1.0, 
-                step_size=0.005
+                discount=0.99, 
+                step_size=0.01
             )
             self._value_function = None
         else:
@@ -47,7 +49,7 @@ class GameAgent(Agent):
             self._optimization_method = OneStepActorCritic(
                 policy=self._policy, 
                 value_function=self._value_function, 
-                discount=1.0, 
+                discount=0.99, 
                 policy_step_size=0.02, 
                 value_step_size=0.02
             )
@@ -88,6 +90,9 @@ class GameAgent(Agent):
         return self._policy.choose_action(state)
     
     def decide_inference(self, state: GameState) -> GameAction:
+        if isinstance(self._policy, GameEpsilonGreedyPolicy):
+            return self._policy.choose_action_inference(state)
+        
         return self._policy.choose_action(state)
     
     def save_parameters(self, path: str):

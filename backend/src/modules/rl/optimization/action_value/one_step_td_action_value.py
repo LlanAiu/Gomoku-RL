@@ -6,14 +6,14 @@ import numpy as np
 
 # internal
 from ...elements import State, Action
-from ...agent import Policy, ActionValueFunction
+from ...agent import ActionValuePolicy, ActionValueFunction
 from .action_value_method import ActionValueMethod
 
 
 class OneStepTDActionValue(ActionValueMethod):
     def __init__(
         self,
-        policy: Policy,
+        policy: ActionValuePolicy,
         q_function: ActionValueFunction,
         discount: float,
         step_size: float,
@@ -24,7 +24,7 @@ class OneStepTDActionValue(ActionValueMethod):
         self._q_function = q_function
 
     @property
-    def policy(self) -> Policy:
+    def policy(self) -> ActionValuePolicy:
         return self._policy
 
     @property
@@ -49,6 +49,7 @@ class OneStepTDActionValue(ActionValueMethod):
         grad = self._q_function.get_gradient(old_state, action)
         q_update = self._step_size * delta * grad
         self._q_function.update(q_update)
+        self._policy.after_step()
 
         try:
             metrics = {

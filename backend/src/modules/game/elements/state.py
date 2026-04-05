@@ -76,10 +76,11 @@ class GameState(State):
         player_1_pieces = np.where(flattened == 1, 1.0, 0.0).astype(dtype=np.float32)
         player_2_pieces = np.where(flattened == 2, 1.0, 0.0).astype(dtype=np.float32)
         
-        empty = np.any(flattened).astype(dtype=np.float32)
-        empty = np.expand_dims(empty, axis=0)
-        
-        self.representation: tuple[np.ndarray, np.ndarray, np.ndarray] = (empty, player_1_pieces, player_2_pieces)
+        total_cells = float(self.board.size)
+        empty_fraction = float(np.sum(flattened == 0)) / total_cells
+        empty = np.array([empty_fraction], dtype=np.float32)
+
+        self.representation = (empty, player_1_pieces, player_2_pieces)
         
     def get_board(self) -> np.ndarray:
         return self.board    

@@ -49,6 +49,7 @@ class EpisodicTrainer(ABC):
         state = self._environment.reset()
         self._agent.reset()
         step_count = 0
+        episode_reward = 0
         
         self._before_episode()
         
@@ -62,9 +63,11 @@ class EpisodicTrainer(ABC):
         
             state = new_state
             step_count += 1
+            episode_reward += reward
             
             self._after_step()
         
+        self._logger.log_scalar("episode_reward", episode_reward, episode=self.train_episode)
         self._logger.log_scalar("episode_length", step_count, episode=self.train_episode)
         
         self._after_episode()

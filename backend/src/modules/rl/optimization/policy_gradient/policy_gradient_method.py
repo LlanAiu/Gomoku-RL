@@ -3,7 +3,7 @@ from abc import abstractmethod
 # external
 
 # internal
-from ...agent import ValueFunction
+from ...agent import ValueFunction, ParametrizedPolicy
 from ..optimization_method import OptimizationMethod
 
 
@@ -13,7 +13,7 @@ class PolicyGradientMethod(OptimizationMethod):
         super().__init__(discount)
         self._policy_discount: float = discount
         self._policy_step_size: float = policy_step_size
-    
+        
     @property
     def policy_step_size(self) -> float:
         return self._policy_step_size
@@ -21,6 +21,11 @@ class PolicyGradientMethod(OptimizationMethod):
     @property
     def policy_discount(self) -> float:
         return self._policy_discount
+    
+    @property
+    @abstractmethod
+    def policy(self) -> ParametrizedPolicy:
+        pass
     
     @property
     @abstractmethod

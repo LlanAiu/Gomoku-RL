@@ -5,14 +5,14 @@ import numpy as np
 
 # internal
 from ...elements import State, Action
-from ...agent import Policy, ValueFunction
+from ...agent import ParametrizedPolicy, ValueFunction
 from .policy_gradient_method import PolicyGradientMethod
 
 
 class OneStepActorCritic(PolicyGradientMethod):
     def __init__(
         self, 
-        policy: Policy, 
+        policy: ParametrizedPolicy, 
         value_function: ValueFunction, 
         discount: float, 
         policy_step_size: float, 
@@ -26,7 +26,7 @@ class OneStepActorCritic(PolicyGradientMethod):
         self.value_step_size = value_step_size
         
     @property
-    def policy(self) -> Policy:
+    def policy(self) -> ParametrizedPolicy:
         return self._policy
     
     @property

@@ -4,7 +4,7 @@ from abc import abstractmethod
 # external
 
 # internal
-from ...agent import ActionValueFunction
+from ...agent import ActionValueFunction, ActionValuePolicy
 from ..optimization_method import OptimizationMethod
 
 class ActionValueMethod(OptimizationMethod):
@@ -15,6 +15,11 @@ class ActionValueMethod(OptimizationMethod):
     @property
     def step_size(self) -> float:
         return self._step_size
+    
+    @property
+    @abstractmethod
+    def policy(self) -> ActionValuePolicy:
+        pass    
     
     @property
     @abstractmethod
