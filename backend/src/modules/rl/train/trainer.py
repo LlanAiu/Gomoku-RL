@@ -8,6 +8,7 @@ from tqdm import tqdm
 # internal
 from ...log import Logger
 from ..environment import EpisodicRLEnvironment
+from ..elements import State, Action
 from ..agent import Agent
 
 
@@ -30,18 +31,6 @@ class EpisodicTrainer(ABC):
     def _setup_agent(self):
         pass
     
-    @abstractmethod
-    def _before_episode(self):
-        pass
-    
-    @abstractmethod
-    def _after_step(self):
-        pass
-    
-    @abstractmethod
-    def _after_episode(self):
-        pass
-    
     def run_train_episode(self):
         if self._environment is None or self._agent is None:
             raise RuntimeError("Cannot train when environment/agent/method is not set!")
@@ -58,8 +47,13 @@ class EpisodicTrainer(ABC):
         
             new_state, reward = self._environment.step(action)
 
-            diagnostics = self._agent.improve(state, action, new_state, reward)
-            self._logger.log_dict(diagnostics, episode=self.train_episode, timestep=step_count)
+            self._update_train(
+                step=step_count,
+                state=state,
+                action=action,
+                new_state=new_state,
+                reward=reward
+            )
         
             state = new_state
             step_count += 1
@@ -71,6 +65,26 @@ class EpisodicTrainer(ABC):
         self._logger.log_scalar("episode_length", step_count, episode=self.train_episode)
         
         self._after_episode()
+    
+    def _before_episode(self):
+        return
+    
+    def _update_train(
+        self, 
+        step: int, 
+        state: State, 
+        action: Action, 
+        new_state: State, 
+        reward: float
+    ):
+        diagnostics = self._agent.improve(state, action, new_state, reward)
+        self._logger.log_dict(diagnostics, episode=self.train_episode, timestep=step)
+
+    def _after_step(self):
+        return
+    
+    def _after_episode(self):
+        return
     
     def train_multiple(self, num_episodes: int):
         self.train_episode = 1

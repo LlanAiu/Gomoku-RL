@@ -12,10 +12,6 @@ class Policy(ABC):
     @abstractmethod
     def choose_action(self, state: State) -> Action:
         pass
-    
-    @abstractmethod
-    def update(self, update: np.ndarray):
-        pass
  
     @abstractmethod 
     def save_parameters(self, path: str):
