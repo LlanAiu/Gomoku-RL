@@ -12,7 +12,7 @@ from src.modules.game.elements import GameState, GameAction
 
 ai_move_router = APIRouter(prefix="/ai-move")
 
-_agent = GameAgent(2, "./src/scripts/test_train/player_two")
+_agent = GameAgent(2, "./test_train/player_one", "action_value")
 
 
 @ai_move_router.post("/")

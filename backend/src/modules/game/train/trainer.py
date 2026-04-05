@@ -10,7 +10,8 @@ from ..agent import GameAgent
 from ...log.logger import Logger
 
 class GameTrainer(EpisodicTrainer):
-    def __init__(self, save_path: str):
+    def __init__(self, save_path: str, mode: str):
+        self.mode = mode
         super().__init__(save_path)
         # create logger for this trainer (logs saved under save_path/logs)
         self.logger = Logger.get_instance(save_dir=os.path.join(self.save_path, "logs"))
@@ -19,8 +20,8 @@ class GameTrainer(EpisodicTrainer):
         self.environment = GameEnvironment()
 
     def _setup_agent(self):
-        self.agent_1 = GameAgent(1, "test_train/player_one")
-        self.agent_2 = GameAgent(2, "test_train/player_two")
+        self.agent_1 = GameAgent(1, "test_train/player_one", self.mode)
+        self.agent_2 = GameAgent(2, "test_train/player_two", self.mode)
         
     def run_train_episode(self):
         if self.environment is None or self.agent_1 is None or self.agent_2 is None:

@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 from ..elements import State, Action
 from .policy import Policy
 from .value_function import ValueFunction
+from .q_function import QFunction
 from ..optimization import OptimizationMethod
 
 
@@ -20,6 +21,11 @@ class Agent(ABC):
     @property
     @abstractmethod
     def value_function(self) -> ValueFunction | None:
+        pass
+
+    @property
+    @abstractmethod
+    def q_function(self) -> QFunction | None:
         pass
     
     @property

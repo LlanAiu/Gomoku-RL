@@ -1,2 +1,3 @@
 from .optimization_method import OptimizationMethod
 from .one_step_actor_critic import OneStepActorCritic
+from .one_step_td_action_value import OneStepTDActionValue
