@@ -37,17 +37,22 @@ export default function GamePage() {
         if (currentEval.finished) return;
         if (board[row][column] !== 0) return;
 
-        const newBoard = board.map((row) => row.slice());
+        const newBoard = board.map((r) => r.slice());
         newBoard[row][column] = 1;
         setBoard(newBoard);
 
+        const postEval = evaluateBoard(newBoard);
+        if (postEval.finished) {
+            return;
+        }
+
         setThinking(true);
         try {
-            const state: GameState = { board: newBoard, finished: false, win_index: -1 };
+            const state: GameState = { board: newBoard, finished: postEval.finished, win_index: postEval.win_index };
             const move: Move = await getRandomMove(state);
             if (move[0] >= 0) {
                 const [moveRow, moveColumn] = move;
-                const next = newBoard.map((row) => row.slice());
+                const next = newBoard.map((r) => r.slice());
                 if (next[moveRow][moveColumn] === 0) {
                     next[moveRow][moveColumn] = 2;
                     setBoard(next);

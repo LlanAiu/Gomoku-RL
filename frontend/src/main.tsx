@@ -4,7 +4,6 @@ import './index.css'
 import App from './App.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import GamePage from './components/game/game-page.tsx'
-import ModelPage from './components/model/model-page.tsx'
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -12,7 +11,6 @@ createRoot(document.getElementById('root')!).render(
             <Routes>
                 <Route index element={<App />} />
                 <Route path='game' element={<GamePage />} />
-                <Route path='model' element={<ModelPage />} />
             </Routes>
         </BrowserRouter>
     </StrictMode>,
