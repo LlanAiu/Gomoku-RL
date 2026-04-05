@@ -15,6 +15,9 @@ class GameQFunction(ActionValueFunction):
         super().__init__()
         self._weights = np.random.uniform(0.02, 0.2, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
         self._player_index = player_index
+        
+    def set_player_index(self, player_index: int):
+        self._player_index = player_index
 
     def evaluate(self, state: GameState, action: GameAction) -> float:
         if state.is_terminal():

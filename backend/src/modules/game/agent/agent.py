@@ -25,7 +25,7 @@ class GameAgent(Agent):
     ):
         super().__init__()
         self._player_index: int = player_index
-        self.mode: Literal["policy", "action_value"] = mode
+        self._mode: Literal["policy", "action_value"] = mode
 
         if mode == "action_value":
             self._q_function = GameQFunction(player_index=player_index)
@@ -70,6 +70,16 @@ class GameAgent(Agent):
     @property
     def optimization_method(self) -> OptimizationMethod:
         return self._optimization_method
+    
+    def set_player_index(self, player_index: int):
+        self._player_index = player_index
+        self._policy.set_player_index(player_index)
+        
+        if self._value_function is not None:
+            self._value_function.set_player_index(player_index)
+            
+        if self._q_function is not None:
+            self._q_function.set_player_index(player_index)
     
     def get_player_index(self) -> int:
         return self._player_index

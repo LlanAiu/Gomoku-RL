@@ -41,7 +41,7 @@ class OneStepActorCritic(PolicyGradientMethod):
         if new_state.is_terminal():
             target = reward
         else:
-            target = reward + self.discount * self._value_function.evaluate_state(new_state)
+            target = reward + self._discount * self._value_function.evaluate_state(new_state)
         
         delta = target - value_previous
 
@@ -51,7 +51,7 @@ class OneStepActorCritic(PolicyGradientMethod):
         policy_update = self.policy_step_size * delta * self.policy_discount * self._policy.get_eligibility(old_state, action)
         self._policy.update(policy_update)
 
-        self.policy_discount *= self.discount
+        self.policy_discount *= self._discount
 
         try:
             import numpy as _np

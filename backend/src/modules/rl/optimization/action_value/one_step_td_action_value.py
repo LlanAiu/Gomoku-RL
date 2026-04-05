@@ -41,12 +41,12 @@ class OneStepTDActionValue(ActionValueMethod):
         else:
             next_action = self._policy.choose_action(new_state)
             q_next = float(self._q_function.evaluate(new_state, next_action))
-            target = reward + self.discount * q_next
+            target = reward + self._discount * q_next
 
         delta = target - q_previous
 
         grad = self._q_function.get_gradient(old_state, action)
-        q_update = self.step_size * delta * grad
+        q_update = self._step_size * delta * grad
         self._q_function.update(q_update)
 
         try:

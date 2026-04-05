@@ -10,11 +10,11 @@ from ..agent import Policy
 
 class OptimizationMethod(ABC):
     def __init__(self, discount: float):
-        self.discount: float = discount
+        self._discount: float = discount
     
     @property
     def discount(self) -> float:
-        return self.discount
+        return self._discount
     
     @property
     @abstractmethod

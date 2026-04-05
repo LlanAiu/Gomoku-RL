@@ -14,22 +14,25 @@ from ..elements import GameState, GameAction
 class GameParametrizedPolicy(ParametrizedPolicy):
     def __init__(self, player_index: int):
         super().__init__()
-        self.weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
-        self.player_index = player_index
+        self._weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
+        self._player_index = player_index
+        
+    def set_player_index(self, player_index: int):
+        self._player_index = player_index
         
     def choose_action(self, state: GameState) -> GameAction:
         embedding = state.get_representation()
         embedding = self._swap_player_indices(embedding)
-        preferences = self.weights.T @ embedding
+        preferences = self._weights.T @ embedding
         
-        valid_actions = state.get_valid_actions(self.player_index)
+        valid_actions = state.get_valid_actions(self._player_index)
         action_mask = self._get_action_mask(valid_actions)
         
         return self._select_softmax(preferences, action_mask)
     
     def _swap_player_indices(self, state_embedding: np.ndarray) -> np.ndarray:
         embedding_copy: np.ndarray = state_embedding.copy().astype(np.float32)
-        player = float(self.player_index)
+        player = float(self._player_index)
 
         player_embedding: np.ndarray = np.where(
             embedding_copy == player, 1.0, 
@@ -66,18 +69,18 @@ class GameParametrizedPolicy(ParametrizedPolicy):
         row = idx // BOARD_SIZE
         col = idx % BOARD_SIZE
 
-        return GameAction(self.player_index, (int(row), int(col)))
+        return GameAction(self._player_index, (int(row), int(col)))
     
     def update(self, update: np.ndarray):
-        self.weights += update
+        self._weights += update
         
     def get_eligibility(self, state: GameState, action: GameAction):
         embedding = state.get_representation()
         embedding = self._swap_player_indices(embedding)
         
-        preferences = self.weights.T @ embedding
+        preferences = self._weights.T @ embedding
         
-        valid_actions = state.get_valid_actions(self.player_index)
+        valid_actions = state.get_valid_actions(self._player_index)
         action_mask = self._get_action_mask(valid_actions)
         
         masked_prefs = np.where(action_mask.astype(bool), preferences, -np.inf)
@@ -105,7 +108,7 @@ class GameParametrizedPolicy(ParametrizedPolicy):
         if p.is_dir():
             p = p / "policy_weights.npy"
         p.parent.mkdir(parents=True, exist_ok=True)
-        np.save(p, self.weights)
+        np.save(p, self._weights)
 
     def load_parameters(self, path: str):
         p = Path(path)
@@ -113,6 +116,6 @@ class GameParametrizedPolicy(ParametrizedPolicy):
             p = p / "policy_weights.npy"
         if not p.exists():
             raise FileNotFoundError(f"Policy weights file not found: {p}")
-        self.weights = np.load(p)
+        self._weights = np.load(p)
         print(f"Successfully loaded policy weights from {p}")
         

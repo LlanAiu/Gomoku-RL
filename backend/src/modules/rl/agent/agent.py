@@ -49,5 +49,8 @@ class Agent(ABC):
     def load_parameters(self, path: str):
         pass
     
+    def reset(self):
+        self.optimization_method.reset()
+    
     def improve(self, old_state: State, action: Action, new_state: State, reward: float):
         return self.optimization_method.improve(old_state, action, new_state, reward)

@@ -11,16 +11,16 @@ class PolicyGradientMethod(OptimizationMethod):
     
     def __init__(self, discount: float, policy_step_size: float):
         super().__init__(discount)
-        self.policy_discount: float = discount
-        self.policy_step_size: float = policy_step_size
+        self._policy_discount: float = discount
+        self._policy_step_size: float = policy_step_size
     
     @property
     def policy_step_size(self) -> float:
-        return self.policy_step_size
+        return self._policy_step_size
     
     @property
     def policy_discount(self) -> float:
-        return self.policy_discount
+        return self._policy_discount
     
     @property
     @abstractmethod

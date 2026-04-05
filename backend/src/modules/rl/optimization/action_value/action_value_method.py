@@ -10,11 +10,11 @@ from ..optimization_method import OptimizationMethod
 class ActionValueMethod(OptimizationMethod):
     def __init__(self, discount: float, step_size: float):
         super().__init__(discount)
-        self.step_size: float = step_size
+        self._step_size: float = step_size
         
     @property
     def step_size(self) -> float:
-        return self.step_size
+        return self._step_size
     
     @property
     @abstractmethod
