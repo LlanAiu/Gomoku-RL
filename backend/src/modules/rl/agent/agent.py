@@ -5,8 +5,9 @@ from abc import ABC, abstractmethod
 
 # internal
 from ..elements import State, Action
-from .policy import Policy
+from .policies.policy import Policy
 from .value_function import ValueFunction
+from .action_value_function import ActionValueFunction
 from ..optimization import OptimizationMethod
 
 
@@ -20,6 +21,11 @@ class Agent(ABC):
     @property
     @abstractmethod
     def value_function(self) -> ValueFunction | None:
+        pass
+
+    @property
+    @abstractmethod
+    def q_function(self) -> ActionValueFunction | None:
         pass
     
     @property
@@ -36,13 +42,15 @@ class Agent(ABC):
         pass
     
     @abstractmethod 
-    def save_parameters(self, path: str) -> None:
+    def save_parameters(self, path: str):
         pass
     
     @abstractmethod
-    def load_parameters(self, path: str) -> None:
+    def load_parameters(self, path: str):
         pass
     
-    def improve(self, old_state: State, action: Action, new_state: State, reward: float):
-        # forward to optimization method and return any diagnostics for logging
+    def reset(self):
+        self.optimization_method.reset()
+    
+    def improve(self, old_state: State, action: Action, new_state: State, reward: float) -> dict:
         return self.optimization_method.improve(old_state, action, new_state, reward)

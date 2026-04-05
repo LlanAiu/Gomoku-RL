@@ -13,6 +13,6 @@ from src.modules.game.train import GameTrainer
 
 
 if __name__ == "__main__":
-    trainer = GameTrainer("test_train")
+    trainer = GameTrainer("test_train_policy", "policy")
     
     trainer.train_multiple(3000)

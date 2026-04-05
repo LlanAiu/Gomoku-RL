@@ -10,6 +10,9 @@ from ..constants import WIN_REWARD, DRAW_REWARD, LOSS_REWARD
 
 
 class GameRewardSignal(RewardSignal):
+    def __init__(self):
+        super().__init__()
+    
     def get_reward(self, _: GameState, new_state: GameState, action: GameAction) -> float:
         if new_state.is_terminal():
             win_index = new_state.get_win_index()

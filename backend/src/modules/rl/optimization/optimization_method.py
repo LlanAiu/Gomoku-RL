@@ -6,19 +6,19 @@ from abc import ABC, abstractmethod
 # internal
 from ..elements import State, Action
 from ..agent import Policy
-from ..agent import ValueFunction
 
 
 class OptimizationMethod(ABC):
+    def __init__(self, discount: float):
+        self._discount: float = discount
+    
+    @property
+    def discount(self) -> float:
+        return self._discount
     
     @property
     @abstractmethod
     def policy(self) -> Policy:
-        pass
-    
-    @property
-    @abstractmethod
-    def value_function(self) -> ValueFunction | None:
         pass
     
     @abstractmethod
@@ -26,5 +26,5 @@ class OptimizationMethod(ABC):
         pass
     
     @abstractmethod
-    def improve(self, old_state: State, action: Action, new_state: State, reward: float):
+    def improve(self, old_state: State, action: Action, new_state: State, reward: float) -> dict:
         pass
