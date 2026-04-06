@@ -41,7 +41,7 @@ backend/
 | - main.py
 | - .env.development
 | - pyproject.toml
-
+| - ...
 ```
 
 In terms of what you actually will be working with, this is almost exclusively in the `modules/rl` and `modules/game` directories (the exception: you'll fiddle with the hard-coded model loading in `api/ai_move/routes.py`)
@@ -49,3 +49,15 @@ In terms of what you actually will be working with, this is almost exclusively i
 You'll notice that `scripts/` is not typically part of a FastAPI project -- and you're right: these aren't run as part of the backend server, they're standalone routines that you can run via: `uv run python src/scripts/train_gomoku.py` (CWD @ `backend`)
 
 That's all in terms of setup, I've also included a `reference.md` file in this directory for a more detailed overview of the RL build.
+
+### Things You'll Do
+- Finish the game environment
+- Write the game reward signal
+- Write a representation for the game state
+- Complete the policy gradient method
+    - parametrized policy + value function
+- OR complete the action value method
+    - epsilon-greedy policy + action value function
+- Finish the game trainer
+- Train a model (and fiddle with hyperparameters, potentially)
+- Load trained model into the `ai_move` route

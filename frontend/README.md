@@ -37,3 +37,7 @@ frontend/
 NOTE: for now, the backend request sent in `lib/game/actions.ts` goes to the `/random-move` endpoint -- play a game (and try to lose) to see what that's like.
 
 When your RL work is done, change this to be `/ai-move` to actually use the model you've trained.
+
+### Things You'll Do
+- Swap the backend route endpoint to `/ai-move` when the RL is done
+- That's it

@@ -13,6 +13,7 @@ from ..elements import GameState, GameAction
 class GameParametrizedPolicy(ParametrizedPolicy):
     def __init__(self, player_index: int):
         super().__init__()
+        # TODO: update FEATURE_IN_DIM
         self._weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
         self._player_index = player_index
         

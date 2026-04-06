@@ -14,6 +14,7 @@ from ..constants import FEATURE_IN_DIM
 class GameValueFunction(ValueFunction):
     def __init__(self, player_index: int):
         super().__init__()
+        # TODO: Update FEATURE_IN_DIM if needed
         self._weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, 1)).astype(np.float32)
         self._player_index = player_index
         

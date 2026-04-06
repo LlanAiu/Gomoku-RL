@@ -13,6 +13,7 @@ from ..constants import FEATURE_IN_DIM, POLICY_OUT_DIM
 class GameQFunction(ActionValueFunction):
     def __init__(self, player_index: int):
         super().__init__()
+        # TODO: update FEATURE_IN_DIM
         self._weights = np.random.normal(0.0, 0.05, (FEATURE_IN_DIM, 1)).astype(np.float32)
         self._player_index = player_index
         
