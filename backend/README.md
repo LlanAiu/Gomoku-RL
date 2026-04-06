@@ -12,6 +12,7 @@ ALLOWED_ORIGIN="http://localhost:5173"
 - Run dev server: `uv run fastapi dev`
 
 ### Organization
+
 This is pretty much your default FastAPI project structure, with some extra additions:
 
 ```

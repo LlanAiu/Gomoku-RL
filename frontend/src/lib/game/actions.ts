@@ -10,7 +10,8 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:8000';
 export async function getRandomMove(state: GameState): Promise<Move> {
     const payload = { state };
 
-    const res = await fetch(`${BACKEND_URL}/ai-move/`, {
+    // TODO: Change this route endpoint to /ai-move/ when the backend is done
+    const res = await fetch(`${BACKEND_URL}/random-move/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
