@@ -67,20 +67,14 @@ class GameState(State):
         back_col = col - d_col
         return not (self._in_bounds(back_row, back_col) and int(self.board[back_row, back_col]) == player)
     
-    def get_representation(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    # TODO: update the type here, because it's Any in the abstract class
+    def get_representation(self) -> ChangeThis:
         return super().get_representation()
     
+    # TODO: How do you want the model to represent the current state?
+    # i.e. what features of the current board do you want to capture 
     def _set_state_representation(self):
-        flattened = self.board.flatten()
-        
-        player_1_pieces = np.where(flattened == 1, 1.0, 0.0).astype(dtype=np.float32)
-        player_2_pieces = np.where(flattened == 2, 1.0, 0.0).astype(dtype=np.float32)
-        
-        total_cells = float(self.board.size)
-        empty_fraction = float(np.sum(flattened == 0)) / total_cells
-        empty = np.array([empty_fraction], dtype=np.float32)
-
-        self.representation = (empty, player_1_pieces, player_2_pieces)
+        raise NotImplementedError("TODO")
         
     def get_board(self) -> np.ndarray:
         return self.board    
@@ -90,5 +84,5 @@ class GameState(State):
         
     def get_valid_actions(self, player_index: int | None = None) -> list[GameAction]:
         empty_positions = np.argwhere(self.board == 0)
-        player_id = 0 if player_index is None else int(player_index)
+        player_id = -1 if player_index is None else int(player_index)
         return [GameAction(player_id, (int(row), int(col))) for row, col in empty_positions]

@@ -13,53 +13,33 @@ from ..elements import GameState, GameAction
 class GameParametrizedPolicy(ParametrizedPolicy):
     def __init__(self, player_index: int):
         super().__init__()
+        # TODO: update FEATURE_IN_DIM
         self._weights = np.random.normal(0.0, 0.01, (FEATURE_IN_DIM, POLICY_OUT_DIM)).astype(np.float32)
         self._player_index = player_index
         
     def set_player_index(self, player_index: int):
         self._player_index = player_index
         
+    # TODO: I've left the tail of this function for you
+    # feel free to change/remove it as you see fit
+    # but they may be helpful in terms of building this out
     def choose_action(self, state: GameState) -> GameAction:
         
-        empty, player_1, player_2 = state.get_representation()
-        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
-        
-        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
-        preferences = self._weights.T @ embedding
+        raise NotImplementedError("TODO")
         
         valid_actions = state.get_valid_actions(self._player_index)
         action_mask = self._get_action_mask(valid_actions)
         
         return self._select_softmax(preferences, action_mask)
-    
-    def _get_player_representation(self, empty: np.ndarray, player_1: np.ndarray, player_2: np.ndarray) -> np.ndarray:
-        if self._player_index == 1:
-            return np.concatenate([empty, player_1, player_2])
-        else:
-            return np.concatenate([empty, player_2, player_1])
-        
+
+    # TODO: return a vector marking the valid actions with a 1.0 and invalid ones with 0.0
     def _get_action_mask(self, valid_actions: list[GameAction]) -> np.ndarray:
-        mask = np.zeros(POLICY_OUT_DIM, dtype=np.float32)
-        
-        for action in valid_actions:
-            row, col = action.get_move()
-            idx = row * BOARD_SIZE + col
-            if 0 <= idx < POLICY_OUT_DIM:
-                mask[idx] = 1.0
-
-        return mask
+        raise NotImplementedError("TODO")
     
+    # TODO: convert preferences + mask of valid actions --> best action to select
+    # BTW -- np.random.choice allows for a sample from a discrete distribution of probabilities
     def _select_softmax(self, preferences: np.ndarray, action_mask: np.ndarray) -> GameAction:
-        masked_prefs = np.where(action_mask.astype(bool), preferences, -np.inf)
-
-        if np.all(np.isneginf(masked_prefs)):
-            raise ValueError("No valid actions available for selection")
-
-        max_pref = np.max(masked_prefs[np.isfinite(masked_prefs)])
-        exps = np.exp(masked_prefs - max_pref)
-        exps[np.isneginf(masked_prefs)] = 0.0
-
-        probs = exps / np.sum(exps)
+        raise NotImplementedError("TODO")
 
         idx = int(np.random.choice(len(probs), p=probs))
 
@@ -71,35 +51,10 @@ class GameParametrizedPolicy(ParametrizedPolicy):
     def update(self, update: np.ndarray):
         self._weights += update
         
+    # TODO: Remember this is the gradient of ln(policy function)
+    # There is more information about this in reference.md that you may find helpful
     def get_eligibility(self, state: GameState, action: GameAction):
-        empty, player_1, player_2 = state.get_representation()
-        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
-        
-        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
-        
-        preferences = self._weights.T @ embedding
-        
-        valid_actions = state.get_valid_actions(self._player_index)
-        action_mask = self._get_action_mask(valid_actions)
-        
-        masked_prefs = np.where(action_mask.astype(bool), preferences, -np.inf)
-
-        if np.all(np.isneginf(masked_prefs)):
-            raise ValueError("No valid actions available for selection")
-
-        max_pref = np.max(masked_prefs[np.isfinite(masked_prefs)])
-        exps = np.exp(masked_prefs - max_pref)
-        exps[np.isneginf(masked_prefs)] = 0.0
-
-        probs = exps / np.sum(exps)
-        
-        one_hot = np.zeros_like(probs)
-        index = action.get_flattened_index()
-        one_hot[index] = 1.0
-        
-        grad_W = np.outer(embedding, (one_hot - probs))
-        
-        return grad_W
+        raise NotImplementedError("TODO")
 
     def save_parameters(self, path: str):
         p = Path(path)

@@ -22,6 +22,7 @@ class GameEnvironment(EpisodicRLEnvironment):
         
         return self.current_state
     
+    # TODO: What should happen when, at the current state, a specific action is taken?
     def step(self, action: GameAction) -> tuple[GameState, float]:
         new_board: np.ndarray = self.current_state.get_board().copy()
         
@@ -34,11 +35,9 @@ class GameEnvironment(EpisodicRLEnvironment):
         if new_board[row, col] != 0:
             print("[WARN][ENV] Selected invalid move, action masking is likely faulty?")
             return (self.current_state, 0.0)
-
-        new_board[row, col] = action.get_player_index()
         
-        new_state = GameState(new_board)
-        reward = self.reward_signal.get_reward(self.current_state, new_state, action)
+        # TODO: Specifically, complete the transition dynamics logic
+        raise NotImplementedError("TODO")
         
         self.history.append(new_state)
         self.current_state = new_state
