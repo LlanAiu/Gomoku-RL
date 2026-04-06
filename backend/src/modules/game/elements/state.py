@@ -90,5 +90,5 @@ class GameState(State):
         
     def get_valid_actions(self, player_index: int | None = None) -> list[GameAction]:
         empty_positions = np.argwhere(self.board == 0)
-        player_id = 0 if player_index is None else int(player_index)
+        player_id = -1 if player_index is None else int(player_index)
         return [GameAction(player_id, (int(row), int(col))) for row, col in empty_positions]
