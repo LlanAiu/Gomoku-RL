@@ -1,8 +1,8 @@
 # builtin
+from typing import Literal
 
 # external
 import numpy as np
-
 
 # internal
 from ..constants import BOARD_SIZE, WIN_COUNT, DIRECTIONS
@@ -68,7 +68,7 @@ class GameState(State):
         return not (self._in_bounds(back_row, back_col) and int(self.board[back_row, back_col]) == player)
     
     # TODO: update the type here, because it's Any in the abstract class
-    def get_representation(self) -> ChangeThis:
+    def get_representation(self) -> Literal["ChangeThis"]:
         return super().get_representation()
     
     # TODO: How do you want the model to represent the current state?
