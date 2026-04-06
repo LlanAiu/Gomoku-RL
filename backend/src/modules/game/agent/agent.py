@@ -27,6 +27,7 @@ class GameAgent(Agent):
         self._player_index: int = player_index
         self._mode: Literal["policy", "action_value"] = mode
 
+        # TODO: you can fiddle with these hyperparameters as you see fit
         if mode == "action_value":
             self._q_function = GameQFunction(player_index=player_index)
             self._policy = GameEpsilonGreedyPolicy(

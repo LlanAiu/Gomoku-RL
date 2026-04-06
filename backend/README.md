@@ -37,7 +37,7 @@ backend/
 | - tests/
   | - modules/
     | - test_game_state.py
-    | - ... (feel free to make your own)
+    | - ... (many more AI-generated tests that are pretty garbage -- but feel free to swap them out with your own better ones)
 | - main.py
 | - .env.development
 | - pyproject.toml

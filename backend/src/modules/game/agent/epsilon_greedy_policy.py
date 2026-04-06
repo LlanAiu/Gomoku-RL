@@ -33,37 +33,17 @@ class GameEpsilonGreedyPolicy(ActionValuePolicy):
     def set_player_index(self, player_index: int):
         self._player_index = player_index
 
+    # TODO: How to decide between greedy action vs explore action?
     def choose_action(self, state: GameState) -> GameAction:
-        valid_actions = state.get_valid_actions(self._player_index)
-        if len(valid_actions) == 0:
-            raise ValueError("No valid actions available for selection")
+        raise NotImplementedError("TODO")
 
-        if np.random.random() < self._epsilon:
-            return valid_actions[np.random.randint(len(valid_actions))]
-
-        q_vals = self.q_function.evaluate_all_actions(state)
-        
-        best_idx = int(np.nanargmax(q_vals))
-        row = best_idx // BOARD_SIZE
-        col = best_idx % BOARD_SIZE
-        
-        return GameAction(self._player_index, (int(row), int(col)))
-
+    # TODO: same as above, but only greedy
     def choose_action_inference(self, state: GameState) -> GameAction:
-        valid_actions = state.get_valid_actions(self._player_index)
-        if len(valid_actions) == 0:
-            raise ValueError("No valid actions available for selection")
+        raise NotImplementedError("TODO")
 
-        q_vals = self.q_function.evaluate_all_actions(state)
-        
-        best_idx = int(np.nanargmax(q_vals))
-        row = best_idx // BOARD_SIZE
-        col = best_idx % BOARD_SIZE
-        
-        return GameAction(self._player_index, (int(row), int(col)))
-
+    # TODO: decay epsilon by the decay rate, but only up until a minimum value
     def after_step(self):
-        self._epsilon = max(self._epsilon_min, self._epsilon * self._epsilon_decay)
+        raise NotImplementedError("TODO")
         return super().after_step()
 
     def save_parameters(self, _: str):

@@ -20,34 +20,19 @@ class GameValueFunction(ValueFunction):
     def set_player_index(self, player_index: int):
         self._player_index = player_index
     
+    # TODO: map state --> state value
     def evaluate_state(self, state: GameState) -> float:
         if state.is_terminal():
             return 0.0
         
-        empty, player_1, player_2 = state.get_representation()
-        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
-        
-        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
-        predicted_value = self._weights.T @ embedding
-        
-        return float(predicted_value[0])
-
-    def _get_player_representation(self, empty: np.ndarray, player_1: np.ndarray, player_2: np.ndarray) -> np.ndarray:
-        if self._player_index == 1:
-            return np.concatenate([empty, player_1, player_2])
-        else:
-            return np.concatenate([empty, player_2, player_1])
+        raise NotImplementedError("TODO")
     
     def update(self, update: np.ndarray):
         self._weights += update
-        
+    
+    # TODO: what is the gradient of this function w.r.t. the weights?  
     def get_gradient(self, state: GameState) -> np.ndarray:
-        empty, player_1, player_2 = state.get_representation()
-        empty_copy, player_1_copy, player_2_copy = empty.copy(), player_1.copy(), player_2.copy()
-        
-        embedding = self._get_player_representation(empty_copy, player_1_copy, player_2_copy)
-        
-        return embedding.reshape(-1, 1)
+        raise NotImplementedError("TODO")
 
     def save_parameters(self, path: str):
         p = Path(path)

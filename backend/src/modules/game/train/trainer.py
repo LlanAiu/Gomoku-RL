@@ -30,7 +30,10 @@ class GameTrainer(EpisodicTrainer):
         self._current_player: int = 1
         self._agent.set_player_index(self._current_player)
         self._previous_record: tuple[int, GameState, GameAction, float] | None = None
-        
+    
+    # TODO: complete the training step -- you'll need to use _previous_record
+    # and likely with those types that I've listed out for you 
+    # (the more important question is why it's even necessary)
     def _update_train(
         self, 
         step: int, 
@@ -39,22 +42,7 @@ class GameTrainer(EpisodicTrainer):
         new_state: GameState, 
         reward: float
     ):
-        if self._previous_record is not None:
-            prev_player, prev_state, prev_action, prev_reward = self._previous_record
-
-            self._agent.set_player_index(prev_player)
-            diagnostics = self._agent.improve(prev_state, prev_action, new_state, prev_reward)
-            self._logger.log_dict(diagnostics, episode=self.train_episode, timestep=step)
-
-            self._agent.set_player_index(action.get_player_index())
-            self._previous_record = None
-
-        if new_state.is_terminal():
-            self._agent.set_player_index(action.get_player_index())
-            diagnostics = self._agent.improve(state, action, new_state, reward)
-            self._logger.log_dict(diagnostics, episode=self.train_episode, timestep=step)
-        else:
-            self._previous_record = (action.get_player_index(), state, action, reward)
+        raise NotImplementedError("TODO")
     
     def _after_step(self):
         self._current_player = 2 if (self._current_player == 1) else 1
