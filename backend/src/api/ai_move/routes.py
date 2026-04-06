@@ -17,9 +17,6 @@ _agent = GameAgent(2, "./test_train_policy/parameters", "policy")
 
 @ai_move_router.post("/")
 async def get_ai_move(input: AiMoveInput) -> AiMoveOutput:
-    
-    # return AiMoveOutput(move=(0, 0))
-    
     board: np.ndarray = np.array(input.state.board)
     state: GameState = GameState(board)
     
